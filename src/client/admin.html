@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>B.U.T. TOKYO 2026 · 관리자</title>
+<!--HEAD-->
+<style>
+<!--THEME-->
+body { background: var(--paper); }
+.shell { max-width: 1280px; margin: 0 auto; padding: 0 20px 80px; }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--ink); margin-bottom: 18px; flex-wrap: wrap; }
+.top h1 { font-size: 20px; }
+.top .label { display: block; }
+nav.tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+nav.tabs button { border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 8px 16px; font-weight: 700; }
+nav.tabs button[aria-selected="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+.panel { padding: 20px; margin-bottom: 18px; }
+.panel h2 { font-size: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 18px; }
+.stat { padding: 16px; }
+.stat b { font-size: 28px; display: block; }
+.bar { height: 6px; border-radius: 99px; background: var(--paper-deep); overflow: hidden; margin-top: 8px; }
+.bar i { display: block; height: 100%; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+th { font-size: 12px; letter-spacing: .06em; color: var(--ink-soft); font-weight: 700; background: var(--paper); position: sticky; top: 0; }
+.cell { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 2px; border: 0; background: none; padding: 4px 6px; border-radius: 8px; text-align: left; }
+.cell:hover { background: var(--paper); }
+.cell small { color: var(--ink-soft); font-size: 11px; }
+.table-wrap { overflow: auto; max-height: 70vh; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.filters .select, .filters .input { width: auto; min-width: 140px; padding: 8px 12px; }
+
+.sub { display: grid; grid-template-columns: minmax(240px, 340px) 1fr; gap: 18px; padding: 18px; margin-bottom: 16px; }
+@media (max-width: 860px) { .sub { grid-template-columns: 1fr; } }
+.sub-photos { display: grid; gap: 10px; align-content: start; }
+.sub-photo { position: relative; border-radius: 12px; overflow: hidden; background: var(--paper-deep); aspect-ratio: 4/3; }
+.sub-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.sub-photo .tools { position: absolute; left: 6px; right: 6px; bottom: 6px; display: flex; gap: 4px; flex-wrap: wrap; }
+.sub-photo .tools button { border: 0; border-radius: 99px; padding: 4px 9px; font-size: 12px; background: rgba(255,255,255,.9); }
+.sub-photo .tools button.on { background: var(--accent); color: #fff; }
+.sub-photo .cap { position: absolute; top: 6px; left: 6px; right: 6px; font-size: 12px; background: rgba(35,48,63,.7); color: #fff; border-radius: 8px; padding: 2px 8px; }
+.orig { font-size: 13px; color: var(--ink-soft); background: var(--paper); padding: 10px 12px; border-radius: 10px; white-space: pre-wrap; font-family: var(--font-body); margin-bottom: 6px; max-height: 160px; overflow: auto; }
+details summary { cursor: pointer; font-size: 13px; color: var(--ink-soft); margin-bottom: 6px; }
+.topic-toggle { border: 1px solid var(--line); background: #fff; border-radius: 99px; padding: 4px 12px; font-size: 13px; }
+.topic-toggle.on { color: #fff; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 99px; overflow: hidden; }
+.seg button { border: 0; background: #fff; padding: 6px 12px; font-size: 13px; }
+.seg button.on { background: var(--ink); color: #fff; }
+
+.outputs { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.out { padding: 16px; display: grid; gap: 10px; align-content: start; }
+.out h3 { font-size: 15px; }
+.out .row .btn { flex: 1; }
+.preview { background: #d9d3c7; border-radius: 14px; padding: 18px; display: grid; gap: 18px; justify-items: center; overflow: auto; max-height: 80vh; }
+.preview .pg { box-shadow: 0 6px 24px rgba(0,0,0,.18); background: #fff; }
+.preview .pg .but-page { transform-origin: 0 0; }
+#print-root { display: none; }
+@media print {
+  body > *:not(#print-root) { display: none !important; }
+  #print-root { display: block !important; }
+  body { background: #fff; }
+}
+.login { max-width: 380px; margin: 12vh auto; padding: 28px; }
+.mono { font-family: ui-monospace, Menlo, monospace; font-size: 13px; }
+.kv { display: grid; grid-template-columns: 160px 1fr; gap: 8px 14px; font-size: 14px; }
+.danger { border-color: var(--accent); }
+</style>
+<style id="print-style"></style>
+</head>
+<body>
+<div class="shell" id="shell">
+  <header class="top">
+    <div><span class="label">B.U.T. TOKYO 2026 · 교사용</span><h1>기록 관리 · 결과물 제작</h1></div>
+    <nav class="tabs hidden" id="tabs" role="tablist">
+      <button data-tab="overview" aria-selected="true">제출 현황</button>
+      <button data-tab="review">검토 · 편집</button>
+      <button data-tab="students">학생 관리</button>
+      <button data-tab="outputs">결과물 제작</button>
+      <button data-tab="settings">설정</button>
+      <button id="logoutBtn" class="btn ghost small">로그아웃</button>
+    </nav>
+  </header>
+  <main id="view"></main>
+</div>
+<div id="print-root"></div>
+<!--LIBS-->
+<script>
+<!--APP-->
+</script>
+</body>
+</html>

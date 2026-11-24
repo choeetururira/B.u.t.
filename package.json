@@ -1,0 +1,32 @@
+{
+  "name": "but-tokyo-2026",
+  "version": "1.0.0",
+  "description": "B.U.T. TOKYO 2026 – 벗과 함께 도쿄를 기록하다: 국외현장체험학습 기록 웹앱과 결과물 자동 제작",
+  "main": "src/local/server.js",
+  "scripts": {
+    "start": "node src/local/server.js",
+    "build": "node scripts/build.js",
+    "photos": "python3 scripts/make-virtual-photos.py data/virtual-photos",
+    "seed": "node scripts/seed-virtual.js --url http://localhost:8080 --admin-password test-admin-2026",
+    "outputs": "node scripts/generate-outputs.js --url http://localhost:8080 --admin-password test-admin-2026",
+    "test": "node --test --test-concurrency=1 tests/*.test.js",
+    "test:unit": "node --test tests/core.test.js tests/gas.test.js tests/layout.test.js",
+    "push:gas": "npm run build && clasp push"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/choeetururira/B.u.t..git"
+  },
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/choeetururira/B.u.t./issues"
+  },
+  "homepage": "https://github.com/choeetururira/B.u.t.#readme",
+  "dependencies": {
+    "@fontsource/gowun-batang": "^5.3.0",
+    "@fontsource/gowun-dodum": "^5.3.0",
+    "pptxgenjs": "^4.0.1",
+    "qrcode-generator": "^2.0.4"
+  },
+  "private": true
+}

@@ -1,0 +1,4378 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>B.U.T. TOKYO 2026 · 관리자</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&display=swap">
+<style>
+/* B.U.T. TOKYO 2026 — 공통 화면 스타일 (학생 · 관리자) */
+:root {
+  --paper: #F5F0E6;
+  --paper-deep: #EBE3D3;
+  --card: #FBF8F2;
+  --ink: #23303F;
+  --ink-soft: #5B6573;
+  --line: #CFCABC;
+  --accent: #C2432F;
+  --accent-soft: #F3DDD6;
+  --indigo: #2F4A6D;
+  --sage: #A9AE9A;
+  --ok: #3F7A52;
+  --ok-soft: #DDEBDF;
+  --warn: #B7791F;
+  --warn-soft: #F6E7C8;
+  --day: #C2432F;
+  --radius: 16px;
+  --shadow: 0 1px 2px rgba(35, 48, 63, .06), 0 6px 20px rgba(35, 48, 63, .07);
+  --font: 'Gowun Dodum', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+  --font-body: 'Gowun Batang', 'AppleMyungjo', 'Batang', serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: var(--indigo); }
+h1, h2, h3 { margin: 0; line-height: 1.3; letter-spacing: -0.01em; }
+.label {
+  font-size: 11px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.muted { color: var(--ink-soft); }
+.hidden { display: none !important; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: #fff;
+  font-weight: 700;
+  transition: transform .08s ease, opacity .15s;
+}
+.btn:active { transform: scale(.98); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.accent { background: var(--accent); border-color: var(--accent); }
+.btn.small { min-height: 34px; padding: 6px 12px; font-size: 14px; }
+.btn.block { width: 100%; }
+
+.field { display: block; margin: 0 0 18px; }
+.field > .field-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.field .hint { font-size: 13px; color: var(--ink-soft); font-weight: 400; }
+.input, .textarea, .select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  font-size: 16px; /* iOS 확대 방지 */
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.textarea { min-height: 140px; resize: vertical; font-family: var(--font-body); line-height: 1.7; }
+.input:focus, .textarea:focus, .select:focus { border-color: var(--ink); box-shadow: 0 0 0 3px rgba(35, 48, 63, .1); }
+.field.invalid .input, .field.invalid .textarea { border-color: var(--accent); }
+.err { color: var(--accent); font-size: 13px; margin-top: 6px; min-height: 0; }
+.counter { font-size: 12px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.counter.bad { color: var(--accent); }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+.badge.ok { background: var(--ok-soft); color: var(--ok); }
+.badge.warn { background: var(--warn-soft); color: var(--warn); }
+.badge.no { background: var(--paper-deep); color: var(--ink-soft); }
+.badge.accent { background: var(--accent-soft); color: var(--accent); }
+
+.stamp {
+  display: inline-grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 20px;
+  transform: rotate(-8deg);
+  box-shadow: inset 0 0 0 3px var(--paper), inset 0 0 0 4px var(--accent);
+  background: var(--paper);
+  flex: none;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 14px;
+  z-index: 100;
+  max-width: calc(100vw - 32px);
+  box-shadow: var(--shadow);
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(35, 48, 63, .5);
+  display: grid;
+  place-items: center;
+  z-index: 90;
+  padding: 16px;
+}
+.dialog {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 24px;
+  width: min(420px, 100%);
+  box-shadow: var(--shadow);
+}
+.dialog h3 { margin-bottom: 8px; }
+.dialog .actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; flex-wrap: wrap; }
+.progress { height: 8px; background: var(--paper-deep); border-radius: 99px; overflow: hidden; margin: 14px 0 6px; }
+.progress > i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+body { background: var(--paper); }
+.shell { max-width: 1280px; margin: 0 auto; padding: 0 20px 80px; }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--ink); margin-bottom: 18px; flex-wrap: wrap; }
+.top h1 { font-size: 20px; }
+.top .label { display: block; }
+nav.tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+nav.tabs button { border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 8px 16px; font-weight: 700; }
+nav.tabs button[aria-selected="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+.panel { padding: 20px; margin-bottom: 18px; }
+.panel h2 { font-size: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 18px; }
+.stat { padding: 16px; }
+.stat b { font-size: 28px; display: block; }
+.bar { height: 6px; border-radius: 99px; background: var(--paper-deep); overflow: hidden; margin-top: 8px; }
+.bar i { display: block; height: 100%; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+th { font-size: 12px; letter-spacing: .06em; color: var(--ink-soft); font-weight: 700; background: var(--paper); position: sticky; top: 0; }
+.cell { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 2px; border: 0; background: none; padding: 4px 6px; border-radius: 8px; text-align: left; }
+.cell:hover { background: var(--paper); }
+.cell small { color: var(--ink-soft); font-size: 11px; }
+.table-wrap { overflow: auto; max-height: 70vh; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.filters .select, .filters .input { width: auto; min-width: 140px; padding: 8px 12px; }
+
+.sub { display: grid; grid-template-columns: minmax(240px, 340px) 1fr; gap: 18px; padding: 18px; margin-bottom: 16px; }
+@media (max-width: 860px) { .sub { grid-template-columns: 1fr; } }
+.sub-photos { display: grid; gap: 10px; align-content: start; }
+.sub-photo { position: relative; border-radius: 12px; overflow: hidden; background: var(--paper-deep); aspect-ratio: 4/3; }
+.sub-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.sub-photo .tools { position: absolute; left: 6px; right: 6px; bottom: 6px; display: flex; gap: 4px; flex-wrap: wrap; }
+.sub-photo .tools button { border: 0; border-radius: 99px; padding: 4px 9px; font-size: 12px; background: rgba(255,255,255,.9); }
+.sub-photo .tools button.on { background: var(--accent); color: #fff; }
+.sub-photo .cap { position: absolute; top: 6px; left: 6px; right: 6px; font-size: 12px; background: rgba(35,48,63,.7); color: #fff; border-radius: 8px; padding: 2px 8px; }
+.orig { font-size: 13px; color: var(--ink-soft); background: var(--paper); padding: 10px 12px; border-radius: 10px; white-space: pre-wrap; font-family: var(--font-body); margin-bottom: 6px; max-height: 160px; overflow: auto; }
+details summary { cursor: pointer; font-size: 13px; color: var(--ink-soft); margin-bottom: 6px; }
+.topic-toggle { border: 1px solid var(--line); background: #fff; border-radius: 99px; padding: 4px 12px; font-size: 13px; }
+.topic-toggle.on { color: #fff; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 99px; overflow: hidden; }
+.seg button { border: 0; background: #fff; padding: 6px 12px; font-size: 13px; }
+.seg button.on { background: var(--ink); color: #fff; }
+
+.outputs { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.out { padding: 16px; display: grid; gap: 10px; align-content: start; }
+.out h3 { font-size: 15px; }
+.out .row .btn { flex: 1; }
+.preview { background: #d9d3c7; border-radius: 14px; padding: 18px; display: grid; gap: 18px; justify-items: center; overflow: auto; max-height: 80vh; }
+.preview .pg { box-shadow: 0 6px 24px rgba(0,0,0,.18); background: #fff; }
+.preview .pg .but-page { transform-origin: 0 0; }
+#print-root { display: none; }
+@media print {
+  body > *:not(#print-root) { display: none !important; }
+  #print-root { display: block !important; }
+  body { background: #fff; }
+}
+.login { max-width: 380px; margin: 12vh auto; padding: 28px; }
+.mono { font-family: ui-monospace, Menlo, monospace; font-size: 13px; }
+.kv { display: grid; grid-template-columns: 160px 1fr; gap: 8px 14px; font-size: 14px; }
+.danger { border-color: var(--accent); }
+</style>
+<style id="print-style"></style>
+</head>
+<body>
+<div class="shell" id="shell">
+  <header class="top">
+    <div><span class="label">B.U.T. TOKYO 2026 · 교사용</span><h1>기록 관리 · 결과물 제작</h1></div>
+    <nav class="tabs hidden" id="tabs" role="tablist">
+      <button data-tab="overview" aria-selected="true">제출 현황</button>
+      <button data-tab="review">검토 · 편집</button>
+      <button data-tab="students">학생 관리</button>
+      <button data-tab="outputs">결과물 제작</button>
+      <button data-tab="settings">설정</button>
+      <button id="logoutBtn" class="btn ghost small">로그아웃</button>
+    </nav>
+  </header>
+  <main id="view"></main>
+</div>
+<div id="print-root"></div>
+<script>
+//---------------------------------------------------------------------
+//
+// QR Code Generator for JavaScript
+//
+// Copyright (c) 2009 Kazuhiko Arase
+//
+// URL: http://www.d-project.com/
+//
+// Licensed under the MIT license:
+//  http://www.opensource.org/licenses/mit-license.php
+//
+// The word 'QR Code' is registered trademark of
+// DENSO WAVE INCORPORATED
+//  http://www.denso-wave.com/qrcode/faqpatent-e.html
+//
+//---------------------------------------------------------------------
+
+var qrcode = function() {
+
+  //---------------------------------------------------------------------
+  // qrcode
+  //---------------------------------------------------------------------
+
+  /**
+   * qrcode
+   * @param typeNumber 1 to 40
+   * @param errorCorrectionLevel 'L','M','Q','H'
+   */
+  var qrcode = function(typeNumber, errorCorrectionLevel) {
+
+    var PAD0 = 0xEC;
+    var PAD1 = 0x11;
+
+    var _typeNumber = typeNumber;
+    var _errorCorrectionLevel = QRErrorCorrectionLevel[errorCorrectionLevel];
+    var _modules = null;
+    var _moduleCount = 0;
+    var _dataCache = null;
+    var _dataList = [];
+
+    var _this = {};
+
+    var makeImpl = function(test, maskPattern) {
+
+      _moduleCount = _typeNumber * 4 + 17;
+      _modules = function(moduleCount) {
+        var modules = new Array(moduleCount);
+        for (var row = 0; row < moduleCount; row += 1) {
+          modules[row] = new Array(moduleCount);
+          for (var col = 0; col < moduleCount; col += 1) {
+            modules[row][col] = null;
+          }
+        }
+        return modules;
+      }(_moduleCount);
+
+      setupPositionProbePattern(0, 0);
+      setupPositionProbePattern(_moduleCount - 7, 0);
+      setupPositionProbePattern(0, _moduleCount - 7);
+      setupPositionAdjustPattern();
+      setupTimingPattern();
+      setupTypeInfo(test, maskPattern);
+
+      if (_typeNumber >= 7) {
+        setupTypeNumber(test);
+      }
+
+      if (_dataCache == null) {
+        _dataCache = createData(_typeNumber, _errorCorrectionLevel, _dataList);
+      }
+
+      mapData(_dataCache, maskPattern);
+    };
+
+    var setupPositionProbePattern = function(row, col) {
+
+      for (var r = -1; r <= 7; r += 1) {
+
+        if (row + r <= -1 || _moduleCount <= row + r) continue;
+
+        for (var c = -1; c <= 7; c += 1) {
+
+          if (col + c <= -1 || _moduleCount <= col + c) continue;
+
+          if ( (0 <= r && r <= 6 && (c == 0 || c == 6) )
+              || (0 <= c && c <= 6 && (r == 0 || r == 6) )
+              || (2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
+            _modules[row + r][col + c] = true;
+          } else {
+            _modules[row + r][col + c] = false;
+          }
+        }
+      }
+    };
+
+    var getBestMaskPattern = function() {
+
+      var minLostPoint = 0;
+      var pattern = 0;
+
+      for (var i = 0; i < 8; i += 1) {
+
+        makeImpl(true, i);
+
+        var lostPoint = QRUtil.getLostPoint(_this);
+
+        if (i == 0 || minLostPoint > lostPoint) {
+          minLostPoint = lostPoint;
+          pattern = i;
+        }
+      }
+
+      return pattern;
+    };
+
+    var setupTimingPattern = function() {
+
+      for (var r = 8; r < _moduleCount - 8; r += 1) {
+        if (_modules[r][6] != null) {
+          continue;
+        }
+        _modules[r][6] = (r % 2 == 0);
+      }
+
+      for (var c = 8; c < _moduleCount - 8; c += 1) {
+        if (_modules[6][c] != null) {
+          continue;
+        }
+        _modules[6][c] = (c % 2 == 0);
+      }
+    };
+
+    var setupPositionAdjustPattern = function() {
+
+      var pos = QRUtil.getPatternPosition(_typeNumber);
+
+      for (var i = 0; i < pos.length; i += 1) {
+
+        for (var j = 0; j < pos.length; j += 1) {
+
+          var row = pos[i];
+          var col = pos[j];
+
+          if (_modules[row][col] != null) {
+            continue;
+          }
+
+          for (var r = -2; r <= 2; r += 1) {
+
+            for (var c = -2; c <= 2; c += 1) {
+
+              if (r == -2 || r == 2 || c == -2 || c == 2
+                  || (r == 0 && c == 0) ) {
+                _modules[row + r][col + c] = true;
+              } else {
+                _modules[row + r][col + c] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+
+    var setupTypeNumber = function(test) {
+
+      var bits = QRUtil.getBCHTypeNumber(_typeNumber);
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[Math.floor(i / 3)][i % 3 + _moduleCount - 8 - 3] = mod;
+      }
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[i % 3 + _moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
+      }
+    };
+
+    var setupTypeInfo = function(test, maskPattern) {
+
+      var data = (_errorCorrectionLevel << 3) | maskPattern;
+      var bits = QRUtil.getBCHTypeInfo(data);
+
+      // vertical
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 6) {
+          _modules[i][8] = mod;
+        } else if (i < 8) {
+          _modules[i + 1][8] = mod;
+        } else {
+          _modules[_moduleCount - 15 + i][8] = mod;
+        }
+      }
+
+      // horizontal
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 8) {
+          _modules[8][_moduleCount - i - 1] = mod;
+        } else if (i < 9) {
+          _modules[8][15 - i - 1 + 1] = mod;
+        } else {
+          _modules[8][15 - i - 1] = mod;
+        }
+      }
+
+      // fixed module
+      _modules[_moduleCount - 8][8] = (!test);
+    };
+
+    var mapData = function(data, maskPattern) {
+
+      var inc = -1;
+      var row = _moduleCount - 1;
+      var bitIndex = 7;
+      var byteIndex = 0;
+      var maskFunc = QRUtil.getMaskFunction(maskPattern);
+
+      for (var col = _moduleCount - 1; col > 0; col -= 2) {
+
+        if (col == 6) col -= 1;
+
+        while (true) {
+
+          for (var c = 0; c < 2; c += 1) {
+
+            if (_modules[row][col - c] == null) {
+
+              var dark = false;
+
+              if (byteIndex < data.length) {
+                dark = ( ( (data[byteIndex] >>> bitIndex) & 1) == 1);
+              }
+
+              var mask = maskFunc(row, col - c);
+
+              if (mask) {
+                dark = !dark;
+              }
+
+              _modules[row][col - c] = dark;
+              bitIndex -= 1;
+
+              if (bitIndex == -1) {
+                byteIndex += 1;
+                bitIndex = 7;
+              }
+            }
+          }
+
+          row += inc;
+
+          if (row < 0 || _moduleCount <= row) {
+            row -= inc;
+            inc = -inc;
+            break;
+          }
+        }
+      }
+    };
+
+    var createBytes = function(buffer, rsBlocks) {
+
+      var offset = 0;
+
+      var maxDcCount = 0;
+      var maxEcCount = 0;
+
+      var dcdata = new Array(rsBlocks.length);
+      var ecdata = new Array(rsBlocks.length);
+
+      for (var r = 0; r < rsBlocks.length; r += 1) {
+
+        var dcCount = rsBlocks[r].dataCount;
+        var ecCount = rsBlocks[r].totalCount - dcCount;
+
+        maxDcCount = Math.max(maxDcCount, dcCount);
+        maxEcCount = Math.max(maxEcCount, ecCount);
+
+        dcdata[r] = new Array(dcCount);
+
+        for (var i = 0; i < dcdata[r].length; i += 1) {
+          dcdata[r][i] = 0xff & buffer.getBuffer()[i + offset];
+        }
+        offset += dcCount;
+
+        var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+        var rawPoly = qrPolynomial(dcdata[r], rsPoly.getLength() - 1);
+
+        var modPoly = rawPoly.mod(rsPoly);
+        ecdata[r] = new Array(rsPoly.getLength() - 1);
+        for (var i = 0; i < ecdata[r].length; i += 1) {
+          var modIndex = i + modPoly.getLength() - ecdata[r].length;
+          ecdata[r][i] = (modIndex >= 0)? modPoly.getAt(modIndex) : 0;
+        }
+      }
+
+      var totalCodeCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalCodeCount += rsBlocks[i].totalCount;
+      }
+
+      var data = new Array(totalCodeCount);
+      var index = 0;
+
+      for (var i = 0; i < maxDcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < dcdata[r].length) {
+            data[index] = dcdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      for (var i = 0; i < maxEcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < ecdata[r].length) {
+            data[index] = ecdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      return data;
+    };
+
+    var createData = function(typeNumber, errorCorrectionLevel, dataList) {
+
+      var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectionLevel);
+
+      var buffer = qrBitBuffer();
+
+      for (var i = 0; i < dataList.length; i += 1) {
+        var data = dataList[i];
+        buffer.put(data.getMode(), 4);
+        buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+        data.write(buffer);
+      }
+
+      // calc num max data.
+      var totalDataCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalDataCount += rsBlocks[i].dataCount;
+      }
+
+      if (buffer.getLengthInBits() > totalDataCount * 8) {
+        throw 'code length overflow. ('
+          + buffer.getLengthInBits()
+          + '>'
+          + totalDataCount * 8
+          + ')';
+      }
+
+      // end code
+      if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
+        buffer.put(0, 4);
+      }
+
+      // padding
+      while (buffer.getLengthInBits() % 8 != 0) {
+        buffer.putBit(false);
+      }
+
+      // padding
+      while (true) {
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD0, 8);
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD1, 8);
+      }
+
+      return createBytes(buffer, rsBlocks);
+    };
+
+    _this.addData = function(data, mode) {
+
+      mode = mode || 'Byte';
+
+      var newData = null;
+
+      switch(mode) {
+      case 'Numeric' :
+        newData = qrNumber(data);
+        break;
+      case 'Alphanumeric' :
+        newData = qrAlphaNum(data);
+        break;
+      case 'Byte' :
+        newData = qr8BitByte(data);
+        break;
+      case 'Kanji' :
+        newData = qrKanji(data);
+        break;
+      default :
+        throw 'mode:' + mode;
+      }
+
+      _dataList.push(newData);
+      _dataCache = null;
+    };
+
+    _this.isDark = function(row, col) {
+      if (row < 0 || _moduleCount <= row || col < 0 || _moduleCount <= col) {
+        throw row + ',' + col;
+      }
+      return _modules[row][col];
+    };
+
+    _this.getModuleCount = function() {
+      return _moduleCount;
+    };
+
+    _this.make = function() {
+      if (_typeNumber < 1) {
+        var typeNumber = 1;
+
+        for (; typeNumber < 40; typeNumber++) {
+          var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, _errorCorrectionLevel);
+          var buffer = qrBitBuffer();
+
+          for (var i = 0; i < _dataList.length; i++) {
+            var data = _dataList[i];
+            buffer.put(data.getMode(), 4);
+            buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+            data.write(buffer);
+          }
+
+          var totalDataCount = 0;
+          for (var i = 0; i < rsBlocks.length; i++) {
+            totalDataCount += rsBlocks[i].dataCount;
+          }
+
+          if (buffer.getLengthInBits() <= totalDataCount * 8) {
+            break;
+          }
+        }
+
+        _typeNumber = typeNumber;
+      }
+
+      makeImpl(false, getBestMaskPattern() );
+    };
+
+    _this.createTableTag = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var qrHtml = '';
+
+      qrHtml += '<table style="';
+      qrHtml += ' border-width: 0px; border-style: none;';
+      qrHtml += ' border-collapse: collapse;';
+      qrHtml += ' padding: 0px; margin: ' + margin + 'px;';
+      qrHtml += '">';
+      qrHtml += '<tbody>';
+
+      for (var r = 0; r < _this.getModuleCount(); r += 1) {
+
+        qrHtml += '<tr>';
+
+        for (var c = 0; c < _this.getModuleCount(); c += 1) {
+          qrHtml += '<td style="';
+          qrHtml += ' border-width: 0px; border-style: none;';
+          qrHtml += ' border-collapse: collapse;';
+          qrHtml += ' padding: 0px; margin: 0px;';
+          qrHtml += ' width: ' + cellSize + 'px;';
+          qrHtml += ' height: ' + cellSize + 'px;';
+          qrHtml += ' background-color: ';
+          qrHtml += _this.isDark(r, c)? '#000000' : '#ffffff';
+          qrHtml += ';';
+          qrHtml += '"/>';
+        }
+
+        qrHtml += '</tr>';
+      }
+
+      qrHtml += '</tbody>';
+      qrHtml += '</table>';
+
+      return qrHtml;
+    };
+
+    _this.createSvgTag = function(cellSize, margin, alt, title) {
+
+      var opts = {};
+      if (typeof arguments[0] == 'object') {
+        // Called by options.
+        opts = arguments[0];
+        // overwrite cellSize and margin.
+        cellSize = opts.cellSize;
+        margin = opts.margin;
+        alt = opts.alt;
+        title = opts.title;
+      }
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      // Compose alt property surrogate
+      alt = (typeof alt === 'string') ? {text: alt} : alt || {};
+      alt.text = alt.text || null;
+      alt.id = (alt.text) ? alt.id || 'qrcode-description' : null;
+
+      // Compose title property surrogate
+      title = (typeof title === 'string') ? {text: title} : title || {};
+      title.text = title.text || null;
+      title.id = (title.text) ? title.id || 'qrcode-title' : null;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var c, mc, r, mr, qrSvg='', rect;
+
+      rect = 'l' + cellSize + ',0 0,' + cellSize +
+        ' -' + cellSize + ',0 0,-' + cellSize + 'z ';
+
+      qrSvg += '<svg version="1.1" xmlns="http://www.w3.org/2000/svg"';
+      qrSvg += !opts.scalable ? ' width="' + size + 'px" height="' + size + 'px"' : '';
+      qrSvg += ' viewBox="0 0 ' + size + ' ' + size + '" ';
+      qrSvg += ' preserveAspectRatio="xMinYMin meet"';
+      qrSvg += (title.text || alt.text) ? ' role="img" aria-labelledby="' +
+          escapeXml([title.id, alt.id].join(' ').trim() ) + '"' : '';
+      qrSvg += '>';
+      qrSvg += (title.text) ? '<title id="' + escapeXml(title.id) + '">' +
+          escapeXml(title.text) + '</title>' : '';
+      qrSvg += (alt.text) ? '<description id="' + escapeXml(alt.id) + '">' +
+          escapeXml(alt.text) + '</description>' : '';
+      qrSvg += '<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>';
+      qrSvg += '<path d="';
+
+      for (r = 0; r < _this.getModuleCount(); r += 1) {
+        mr = r * cellSize + margin;
+        for (c = 0; c < _this.getModuleCount(); c += 1) {
+          if (_this.isDark(r, c) ) {
+            mc = c*cellSize+margin;
+            qrSvg += 'M' + mc + ',' + mr + rect;
+          }
+        }
+      }
+
+      qrSvg += '" stroke="transparent" fill="black"/>';
+      qrSvg += '</svg>';
+
+      return qrSvg;
+    };
+
+    _this.createDataURL = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      return createDataURL(size, size, function(x, y) {
+        if (min <= x && x < max && min <= y && y < max) {
+          var c = Math.floor( (x - min) / cellSize);
+          var r = Math.floor( (y - min) / cellSize);
+          return _this.isDark(r, c)? 0 : 1;
+        } else {
+          return 1;
+        }
+      } );
+    };
+
+    _this.createImgTag = function(cellSize, margin, alt) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+
+      var img = '';
+      img += '<img';
+      img += '\u0020src="';
+      img += _this.createDataURL(cellSize, margin);
+      img += '"';
+      img += '\u0020width="';
+      img += size;
+      img += '"';
+      img += '\u0020height="';
+      img += size;
+      img += '"';
+      if (alt) {
+        img += '\u0020alt="';
+        img += escapeXml(alt);
+        img += '"';
+      }
+      img += '/>';
+
+      return img;
+    };
+
+    var escapeXml = function(s) {
+      var escaped = '';
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charAt(i);
+        switch(c) {
+        case '<': escaped += '&lt;'; break;
+        case '>': escaped += '&gt;'; break;
+        case '&': escaped += '&amp;'; break;
+        case '"': escaped += '&quot;'; break;
+        default : escaped += c; break;
+        }
+      }
+      return escaped;
+    };
+
+    var _createHalfASCII = function(margin) {
+      var cellSize = 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r1, r2, p;
+
+      var blocks = {
+        '██': '█',
+        '█ ': '▀',
+        ' █': '▄',
+        '  ': ' '
+      };
+
+      var blocksLastLineNoMargin = {
+        '██': '▀',
+        '█ ': '▀',
+        ' █': ' ',
+        '  ': ' '
+      };
+
+      var ascii = '';
+      for (y = 0; y < size; y += 2) {
+        r1 = Math.floor((y - min) / cellSize);
+        r2 = Math.floor((y + 1 - min) / cellSize);
+        for (x = 0; x < size; x += 1) {
+          p = '█';
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r1, Math.floor((x - min) / cellSize))) {
+            p = ' ';
+          }
+
+          if (min <= x && x < max && min <= y+1 && y+1 < max && _this.isDark(r2, Math.floor((x - min) / cellSize))) {
+            p += ' ';
+          }
+          else {
+            p += '█';
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          ascii += (margin < 1 && y+1 >= max) ? blocksLastLineNoMargin[p] : blocks[p];
+        }
+
+        ascii += '\n';
+      }
+
+      if (size % 2 && margin > 0) {
+        return ascii.substring(0, ascii.length - size - 1) + Array(size+1).join('▀');
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.createASCII = function(cellSize, margin) {
+      cellSize = cellSize || 1;
+
+      if (cellSize < 2) {
+        return _createHalfASCII(margin);
+      }
+
+      cellSize -= 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r, p;
+
+      var white = Array(cellSize+1).join('██');
+      var black = Array(cellSize+1).join('  ');
+
+      var ascii = '';
+      var line = '';
+      for (y = 0; y < size; y += 1) {
+        r = Math.floor( (y - min) / cellSize);
+        line = '';
+        for (x = 0; x < size; x += 1) {
+          p = 1;
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r, Math.floor((x - min) / cellSize))) {
+            p = 0;
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          line += p ? white : black;
+        }
+
+        for (r = 0; r < cellSize; r += 1) {
+          ascii += line + '\n';
+        }
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.renderTo2dContext = function(context, cellSize) {
+      cellSize = cellSize || 2;
+      var length = _this.getModuleCount();
+      for (var row = 0; row < length; row++) {
+        for (var col = 0; col < length; col++) {
+          context.fillStyle = _this.isDark(row, col) ? 'black' : 'white';
+          context.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+        }
+      }
+    }
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrcode.stringToBytes
+  //---------------------------------------------------------------------
+
+  qrcode.stringToBytesFuncs = {
+    'default' : function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        bytes.push(c & 0xff);
+      }
+      return bytes;
+    }
+  };
+
+  qrcode.stringToBytes = qrcode.stringToBytesFuncs['default'];
+
+  //---------------------------------------------------------------------
+  // qrcode.createStringToBytes
+  //---------------------------------------------------------------------
+
+  /**
+   * @param unicodeData base64 string of byte array.
+   * [16bit Unicode],[16bit Bytes], ...
+   * @param numChars
+   */
+  qrcode.createStringToBytes = function(unicodeData, numChars) {
+
+    // create conversion map.
+
+    var unicodeMap = function() {
+
+      var bin = base64DecodeInputStream(unicodeData);
+      var read = function() {
+        var b = bin.read();
+        if (b == -1) throw 'eof';
+        return b;
+      };
+
+      var count = 0;
+      var unicodeMap = {};
+      while (true) {
+        var b0 = bin.read();
+        if (b0 == -1) break;
+        var b1 = read();
+        var b2 = read();
+        var b3 = read();
+        var k = String.fromCharCode( (b0 << 8) | b1);
+        var v = (b2 << 8) | b3;
+        unicodeMap[k] = v;
+        count += 1;
+      }
+      if (count != numChars) {
+        throw count + ' != ' + numChars;
+      }
+
+      return unicodeMap;
+    }();
+
+    var unknownChar = '?'.charCodeAt(0);
+
+    return function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        if (c < 128) {
+          bytes.push(c);
+        } else {
+          var b = unicodeMap[s.charAt(i)];
+          if (typeof b == 'number') {
+            if ( (b & 0xff) == b) {
+              // 1byte
+              bytes.push(b);
+            } else {
+              // 2bytes
+              bytes.push(b >>> 8);
+              bytes.push(b & 0xff);
+            }
+          } else {
+            bytes.push(unknownChar);
+          }
+        }
+      }
+      return bytes;
+    };
+  };
+
+  //---------------------------------------------------------------------
+  // QRMode
+  //---------------------------------------------------------------------
+
+  var QRMode = {
+    MODE_NUMBER :    1 << 0,
+    MODE_ALPHA_NUM : 1 << 1,
+    MODE_8BIT_BYTE : 1 << 2,
+    MODE_KANJI :     1 << 3
+  };
+
+  //---------------------------------------------------------------------
+  // QRErrorCorrectionLevel
+  //---------------------------------------------------------------------
+
+  var QRErrorCorrectionLevel = {
+    L : 1,
+    M : 0,
+    Q : 3,
+    H : 2
+  };
+
+  //---------------------------------------------------------------------
+  // QRMaskPattern
+  //---------------------------------------------------------------------
+
+  var QRMaskPattern = {
+    PATTERN000 : 0,
+    PATTERN001 : 1,
+    PATTERN010 : 2,
+    PATTERN011 : 3,
+    PATTERN100 : 4,
+    PATTERN101 : 5,
+    PATTERN110 : 6,
+    PATTERN111 : 7
+  };
+
+  //---------------------------------------------------------------------
+  // QRUtil
+  //---------------------------------------------------------------------
+
+  var QRUtil = function() {
+
+    var PATTERN_POSITION_TABLE = [
+      [],
+      [6, 18],
+      [6, 22],
+      [6, 26],
+      [6, 30],
+      [6, 34],
+      [6, 22, 38],
+      [6, 24, 42],
+      [6, 26, 46],
+      [6, 28, 50],
+      [6, 30, 54],
+      [6, 32, 58],
+      [6, 34, 62],
+      [6, 26, 46, 66],
+      [6, 26, 48, 70],
+      [6, 26, 50, 74],
+      [6, 30, 54, 78],
+      [6, 30, 56, 82],
+      [6, 30, 58, 86],
+      [6, 34, 62, 90],
+      [6, 28, 50, 72, 94],
+      [6, 26, 50, 74, 98],
+      [6, 30, 54, 78, 102],
+      [6, 28, 54, 80, 106],
+      [6, 32, 58, 84, 110],
+      [6, 30, 58, 86, 114],
+      [6, 34, 62, 90, 118],
+      [6, 26, 50, 74, 98, 122],
+      [6, 30, 54, 78, 102, 126],
+      [6, 26, 52, 78, 104, 130],
+      [6, 30, 56, 82, 108, 134],
+      [6, 34, 60, 86, 112, 138],
+      [6, 30, 58, 86, 114, 142],
+      [6, 34, 62, 90, 118, 146],
+      [6, 30, 54, 78, 102, 126, 150],
+      [6, 24, 50, 76, 102, 128, 154],
+      [6, 28, 54, 80, 106, 132, 158],
+      [6, 32, 58, 84, 110, 136, 162],
+      [6, 26, 54, 82, 110, 138, 166],
+      [6, 30, 58, 86, 114, 142, 170]
+    ];
+    var G15 = (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0);
+    var G18 = (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0);
+    var G15_MASK = (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1);
+
+    var _this = {};
+
+    var getBCHDigit = function(data) {
+      var digit = 0;
+      while (data != 0) {
+        digit += 1;
+        data >>>= 1;
+      }
+      return digit;
+    };
+
+    _this.getBCHTypeInfo = function(data) {
+      var d = data << 10;
+      while (getBCHDigit(d) - getBCHDigit(G15) >= 0) {
+        d ^= (G15 << (getBCHDigit(d) - getBCHDigit(G15) ) );
+      }
+      return ( (data << 10) | d) ^ G15_MASK;
+    };
+
+    _this.getBCHTypeNumber = function(data) {
+      var d = data << 12;
+      while (getBCHDigit(d) - getBCHDigit(G18) >= 0) {
+        d ^= (G18 << (getBCHDigit(d) - getBCHDigit(G18) ) );
+      }
+      return (data << 12) | d;
+    };
+
+    _this.getPatternPosition = function(typeNumber) {
+      return PATTERN_POSITION_TABLE[typeNumber - 1];
+    };
+
+    _this.getMaskFunction = function(maskPattern) {
+
+      switch (maskPattern) {
+
+      case QRMaskPattern.PATTERN000 :
+        return function(i, j) { return (i + j) % 2 == 0; };
+      case QRMaskPattern.PATTERN001 :
+        return function(i, j) { return i % 2 == 0; };
+      case QRMaskPattern.PATTERN010 :
+        return function(i, j) { return j % 3 == 0; };
+      case QRMaskPattern.PATTERN011 :
+        return function(i, j) { return (i + j) % 3 == 0; };
+      case QRMaskPattern.PATTERN100 :
+        return function(i, j) { return (Math.floor(i / 2) + Math.floor(j / 3) ) % 2 == 0; };
+      case QRMaskPattern.PATTERN101 :
+        return function(i, j) { return (i * j) % 2 + (i * j) % 3 == 0; };
+      case QRMaskPattern.PATTERN110 :
+        return function(i, j) { return ( (i * j) % 2 + (i * j) % 3) % 2 == 0; };
+      case QRMaskPattern.PATTERN111 :
+        return function(i, j) { return ( (i * j) % 3 + (i + j) % 2) % 2 == 0; };
+
+      default :
+        throw 'bad maskPattern:' + maskPattern;
+      }
+    };
+
+    _this.getErrorCorrectPolynomial = function(errorCorrectLength) {
+      var a = qrPolynomial([1], 0);
+      for (var i = 0; i < errorCorrectLength; i += 1) {
+        a = a.multiply(qrPolynomial([1, QRMath.gexp(i)], 0) );
+      }
+      return a;
+    };
+
+    _this.getLengthInBits = function(mode, type) {
+
+      if (1 <= type && type < 10) {
+
+        // 1 - 9
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 10;
+        case QRMode.MODE_ALPHA_NUM : return 9;
+        case QRMode.MODE_8BIT_BYTE : return 8;
+        case QRMode.MODE_KANJI     : return 8;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 27) {
+
+        // 10 - 26
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 12;
+        case QRMode.MODE_ALPHA_NUM : return 11;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 10;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 41) {
+
+        // 27 - 40
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 14;
+        case QRMode.MODE_ALPHA_NUM : return 13;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 12;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else {
+        throw 'type:' + type;
+      }
+    };
+
+    _this.getLostPoint = function(qrcode) {
+
+      var moduleCount = qrcode.getModuleCount();
+
+      var lostPoint = 0;
+
+      // LEVEL1
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount; col += 1) {
+
+          var sameCount = 0;
+          var dark = qrcode.isDark(row, col);
+
+          for (var r = -1; r <= 1; r += 1) {
+
+            if (row + r < 0 || moduleCount <= row + r) {
+              continue;
+            }
+
+            for (var c = -1; c <= 1; c += 1) {
+
+              if (col + c < 0 || moduleCount <= col + c) {
+                continue;
+              }
+
+              if (r == 0 && c == 0) {
+                continue;
+              }
+
+              if (dark == qrcode.isDark(row + r, col + c) ) {
+                sameCount += 1;
+              }
+            }
+          }
+
+          if (sameCount > 5) {
+            lostPoint += (3 + sameCount - 5);
+          }
+        }
+      };
+
+      // LEVEL2
+
+      for (var row = 0; row < moduleCount - 1; row += 1) {
+        for (var col = 0; col < moduleCount - 1; col += 1) {
+          var count = 0;
+          if (qrcode.isDark(row, col) ) count += 1;
+          if (qrcode.isDark(row + 1, col) ) count += 1;
+          if (qrcode.isDark(row, col + 1) ) count += 1;
+          if (qrcode.isDark(row + 1, col + 1) ) count += 1;
+          if (count == 0 || count == 4) {
+            lostPoint += 3;
+          }
+        }
+      }
+
+      // LEVEL3
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount - 6; col += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row, col + 1)
+              &&  qrcode.isDark(row, col + 2)
+              &&  qrcode.isDark(row, col + 3)
+              &&  qrcode.isDark(row, col + 4)
+              && !qrcode.isDark(row, col + 5)
+              &&  qrcode.isDark(row, col + 6) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount - 6; row += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row + 1, col)
+              &&  qrcode.isDark(row + 2, col)
+              &&  qrcode.isDark(row + 3, col)
+              &&  qrcode.isDark(row + 4, col)
+              && !qrcode.isDark(row + 5, col)
+              &&  qrcode.isDark(row + 6, col) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      // LEVEL4
+
+      var darkCount = 0;
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount; row += 1) {
+          if (qrcode.isDark(row, col) ) {
+            darkCount += 1;
+          }
+        }
+      }
+
+      var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+      lostPoint += ratio * 10;
+
+      return lostPoint;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // QRMath
+  //---------------------------------------------------------------------
+
+  var QRMath = function() {
+
+    var EXP_TABLE = new Array(256);
+    var LOG_TABLE = new Array(256);
+
+    // initialize tables
+    for (var i = 0; i < 8; i += 1) {
+      EXP_TABLE[i] = 1 << i;
+    }
+    for (var i = 8; i < 256; i += 1) {
+      EXP_TABLE[i] = EXP_TABLE[i - 4]
+        ^ EXP_TABLE[i - 5]
+        ^ EXP_TABLE[i - 6]
+        ^ EXP_TABLE[i - 8];
+    }
+    for (var i = 0; i < 255; i += 1) {
+      LOG_TABLE[EXP_TABLE[i] ] = i;
+    }
+
+    var _this = {};
+
+    _this.glog = function(n) {
+
+      if (n < 1) {
+        throw 'glog(' + n + ')';
+      }
+
+      return LOG_TABLE[n];
+    };
+
+    _this.gexp = function(n) {
+
+      while (n < 0) {
+        n += 255;
+      }
+
+      while (n >= 256) {
+        n -= 255;
+      }
+
+      return EXP_TABLE[n];
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrPolynomial
+  //---------------------------------------------------------------------
+
+  function qrPolynomial(num, shift) {
+
+    if (typeof num.length == 'undefined') {
+      throw num.length + '/' + shift;
+    }
+
+    var _num = function() {
+      var offset = 0;
+      while (offset < num.length && num[offset] == 0) {
+        offset += 1;
+      }
+      var _num = new Array(num.length - offset + shift);
+      for (var i = 0; i < num.length - offset; i += 1) {
+        _num[i] = num[i + offset];
+      }
+      return _num;
+    }();
+
+    var _this = {};
+
+    _this.getAt = function(index) {
+      return _num[index];
+    };
+
+    _this.getLength = function() {
+      return _num.length;
+    };
+
+    _this.multiply = function(e) {
+
+      var num = new Array(_this.getLength() + e.getLength() - 1);
+
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        for (var j = 0; j < e.getLength(); j += 1) {
+          num[i + j] ^= QRMath.gexp(QRMath.glog(_this.getAt(i) ) + QRMath.glog(e.getAt(j) ) );
+        }
+      }
+
+      return qrPolynomial(num, 0);
+    };
+
+    _this.mod = function(e) {
+
+      if (_this.getLength() - e.getLength() < 0) {
+        return _this;
+      }
+
+      var ratio = QRMath.glog(_this.getAt(0) ) - QRMath.glog(e.getAt(0) );
+
+      var num = new Array(_this.getLength() );
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        num[i] = _this.getAt(i);
+      }
+
+      for (var i = 0; i < e.getLength(); i += 1) {
+        num[i] ^= QRMath.gexp(QRMath.glog(e.getAt(i) ) + ratio);
+      }
+
+      // recursive call
+      return qrPolynomial(num, 0).mod(e);
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // QRRSBlock
+  //---------------------------------------------------------------------
+
+  var QRRSBlock = function() {
+
+    var RS_BLOCK_TABLE = [
+
+      // L
+      // M
+      // Q
+      // H
+
+      // 1
+      [1, 26, 19],
+      [1, 26, 16],
+      [1, 26, 13],
+      [1, 26, 9],
+
+      // 2
+      [1, 44, 34],
+      [1, 44, 28],
+      [1, 44, 22],
+      [1, 44, 16],
+
+      // 3
+      [1, 70, 55],
+      [1, 70, 44],
+      [2, 35, 17],
+      [2, 35, 13],
+
+      // 4
+      [1, 100, 80],
+      [2, 50, 32],
+      [2, 50, 24],
+      [4, 25, 9],
+
+      // 5
+      [1, 134, 108],
+      [2, 67, 43],
+      [2, 33, 15, 2, 34, 16],
+      [2, 33, 11, 2, 34, 12],
+
+      // 6
+      [2, 86, 68],
+      [4, 43, 27],
+      [4, 43, 19],
+      [4, 43, 15],
+
+      // 7
+      [2, 98, 78],
+      [4, 49, 31],
+      [2, 32, 14, 4, 33, 15],
+      [4, 39, 13, 1, 40, 14],
+
+      // 8
+      [2, 121, 97],
+      [2, 60, 38, 2, 61, 39],
+      [4, 40, 18, 2, 41, 19],
+      [4, 40, 14, 2, 41, 15],
+
+      // 9
+      [2, 146, 116],
+      [3, 58, 36, 2, 59, 37],
+      [4, 36, 16, 4, 37, 17],
+      [4, 36, 12, 4, 37, 13],
+
+      // 10
+      [2, 86, 68, 2, 87, 69],
+      [4, 69, 43, 1, 70, 44],
+      [6, 43, 19, 2, 44, 20],
+      [6, 43, 15, 2, 44, 16],
+
+      // 11
+      [4, 101, 81],
+      [1, 80, 50, 4, 81, 51],
+      [4, 50, 22, 4, 51, 23],
+      [3, 36, 12, 8, 37, 13],
+
+      // 12
+      [2, 116, 92, 2, 117, 93],
+      [6, 58, 36, 2, 59, 37],
+      [4, 46, 20, 6, 47, 21],
+      [7, 42, 14, 4, 43, 15],
+
+      // 13
+      [4, 133, 107],
+      [8, 59, 37, 1, 60, 38],
+      [8, 44, 20, 4, 45, 21],
+      [12, 33, 11, 4, 34, 12],
+
+      // 14
+      [3, 145, 115, 1, 146, 116],
+      [4, 64, 40, 5, 65, 41],
+      [11, 36, 16, 5, 37, 17],
+      [11, 36, 12, 5, 37, 13],
+
+      // 15
+      [5, 109, 87, 1, 110, 88],
+      [5, 65, 41, 5, 66, 42],
+      [5, 54, 24, 7, 55, 25],
+      [11, 36, 12, 7, 37, 13],
+
+      // 16
+      [5, 122, 98, 1, 123, 99],
+      [7, 73, 45, 3, 74, 46],
+      [15, 43, 19, 2, 44, 20],
+      [3, 45, 15, 13, 46, 16],
+
+      // 17
+      [1, 135, 107, 5, 136, 108],
+      [10, 74, 46, 1, 75, 47],
+      [1, 50, 22, 15, 51, 23],
+      [2, 42, 14, 17, 43, 15],
+
+      // 18
+      [5, 150, 120, 1, 151, 121],
+      [9, 69, 43, 4, 70, 44],
+      [17, 50, 22, 1, 51, 23],
+      [2, 42, 14, 19, 43, 15],
+
+      // 19
+      [3, 141, 113, 4, 142, 114],
+      [3, 70, 44, 11, 71, 45],
+      [17, 47, 21, 4, 48, 22],
+      [9, 39, 13, 16, 40, 14],
+
+      // 20
+      [3, 135, 107, 5, 136, 108],
+      [3, 67, 41, 13, 68, 42],
+      [15, 54, 24, 5, 55, 25],
+      [15, 43, 15, 10, 44, 16],
+
+      // 21
+      [4, 144, 116, 4, 145, 117],
+      [17, 68, 42],
+      [17, 50, 22, 6, 51, 23],
+      [19, 46, 16, 6, 47, 17],
+
+      // 22
+      [2, 139, 111, 7, 140, 112],
+      [17, 74, 46],
+      [7, 54, 24, 16, 55, 25],
+      [34, 37, 13],
+
+      // 23
+      [4, 151, 121, 5, 152, 122],
+      [4, 75, 47, 14, 76, 48],
+      [11, 54, 24, 14, 55, 25],
+      [16, 45, 15, 14, 46, 16],
+
+      // 24
+      [6, 147, 117, 4, 148, 118],
+      [6, 73, 45, 14, 74, 46],
+      [11, 54, 24, 16, 55, 25],
+      [30, 46, 16, 2, 47, 17],
+
+      // 25
+      [8, 132, 106, 4, 133, 107],
+      [8, 75, 47, 13, 76, 48],
+      [7, 54, 24, 22, 55, 25],
+      [22, 45, 15, 13, 46, 16],
+
+      // 26
+      [10, 142, 114, 2, 143, 115],
+      [19, 74, 46, 4, 75, 47],
+      [28, 50, 22, 6, 51, 23],
+      [33, 46, 16, 4, 47, 17],
+
+      // 27
+      [8, 152, 122, 4, 153, 123],
+      [22, 73, 45, 3, 74, 46],
+      [8, 53, 23, 26, 54, 24],
+      [12, 45, 15, 28, 46, 16],
+
+      // 28
+      [3, 147, 117, 10, 148, 118],
+      [3, 73, 45, 23, 74, 46],
+      [4, 54, 24, 31, 55, 25],
+      [11, 45, 15, 31, 46, 16],
+
+      // 29
+      [7, 146, 116, 7, 147, 117],
+      [21, 73, 45, 7, 74, 46],
+      [1, 53, 23, 37, 54, 24],
+      [19, 45, 15, 26, 46, 16],
+
+      // 30
+      [5, 145, 115, 10, 146, 116],
+      [19, 75, 47, 10, 76, 48],
+      [15, 54, 24, 25, 55, 25],
+      [23, 45, 15, 25, 46, 16],
+
+      // 31
+      [13, 145, 115, 3, 146, 116],
+      [2, 74, 46, 29, 75, 47],
+      [42, 54, 24, 1, 55, 25],
+      [23, 45, 15, 28, 46, 16],
+
+      // 32
+      [17, 145, 115],
+      [10, 74, 46, 23, 75, 47],
+      [10, 54, 24, 35, 55, 25],
+      [19, 45, 15, 35, 46, 16],
+
+      // 33
+      [17, 145, 115, 1, 146, 116],
+      [14, 74, 46, 21, 75, 47],
+      [29, 54, 24, 19, 55, 25],
+      [11, 45, 15, 46, 46, 16],
+
+      // 34
+      [13, 145, 115, 6, 146, 116],
+      [14, 74, 46, 23, 75, 47],
+      [44, 54, 24, 7, 55, 25],
+      [59, 46, 16, 1, 47, 17],
+
+      // 35
+      [12, 151, 121, 7, 152, 122],
+      [12, 75, 47, 26, 76, 48],
+      [39, 54, 24, 14, 55, 25],
+      [22, 45, 15, 41, 46, 16],
+
+      // 36
+      [6, 151, 121, 14, 152, 122],
+      [6, 75, 47, 34, 76, 48],
+      [46, 54, 24, 10, 55, 25],
+      [2, 45, 15, 64, 46, 16],
+
+      // 37
+      [17, 152, 122, 4, 153, 123],
+      [29, 74, 46, 14, 75, 47],
+      [49, 54, 24, 10, 55, 25],
+      [24, 45, 15, 46, 46, 16],
+
+      // 38
+      [4, 152, 122, 18, 153, 123],
+      [13, 74, 46, 32, 75, 47],
+      [48, 54, 24, 14, 55, 25],
+      [42, 45, 15, 32, 46, 16],
+
+      // 39
+      [20, 147, 117, 4, 148, 118],
+      [40, 75, 47, 7, 76, 48],
+      [43, 54, 24, 22, 55, 25],
+      [10, 45, 15, 67, 46, 16],
+
+      // 40
+      [19, 148, 118, 6, 149, 119],
+      [18, 75, 47, 31, 76, 48],
+      [34, 54, 24, 34, 55, 25],
+      [20, 45, 15, 61, 46, 16]
+    ];
+
+    var qrRSBlock = function(totalCount, dataCount) {
+      var _this = {};
+      _this.totalCount = totalCount;
+      _this.dataCount = dataCount;
+      return _this;
+    };
+
+    var _this = {};
+
+    var getRsBlockTable = function(typeNumber, errorCorrectionLevel) {
+
+      switch(errorCorrectionLevel) {
+      case QRErrorCorrectionLevel.L :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+      case QRErrorCorrectionLevel.M :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+      case QRErrorCorrectionLevel.Q :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+      case QRErrorCorrectionLevel.H :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+      default :
+        return undefined;
+      }
+    };
+
+    _this.getRSBlocks = function(typeNumber, errorCorrectionLevel) {
+
+      var rsBlock = getRsBlockTable(typeNumber, errorCorrectionLevel);
+
+      if (typeof rsBlock == 'undefined') {
+        throw 'bad rs block @ typeNumber:' + typeNumber +
+            '/errorCorrectionLevel:' + errorCorrectionLevel;
+      }
+
+      var length = rsBlock.length / 3;
+
+      var list = [];
+
+      for (var i = 0; i < length; i += 1) {
+
+        var count = rsBlock[i * 3 + 0];
+        var totalCount = rsBlock[i * 3 + 1];
+        var dataCount = rsBlock[i * 3 + 2];
+
+        for (var j = 0; j < count; j += 1) {
+          list.push(qrRSBlock(totalCount, dataCount) );
+        }
+      }
+
+      return list;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrBitBuffer
+  //---------------------------------------------------------------------
+
+  var qrBitBuffer = function() {
+
+    var _buffer = [];
+    var _length = 0;
+
+    var _this = {};
+
+    _this.getBuffer = function() {
+      return _buffer;
+    };
+
+    _this.getAt = function(index) {
+      var bufIndex = Math.floor(index / 8);
+      return ( (_buffer[bufIndex] >>> (7 - index % 8) ) & 1) == 1;
+    };
+
+    _this.put = function(num, length) {
+      for (var i = 0; i < length; i += 1) {
+        _this.putBit( ( (num >>> (length - i - 1) ) & 1) == 1);
+      }
+    };
+
+    _this.getLengthInBits = function() {
+      return _length;
+    };
+
+    _this.putBit = function(bit) {
+
+      var bufIndex = Math.floor(_length / 8);
+      if (_buffer.length <= bufIndex) {
+        _buffer.push(0);
+      }
+
+      if (bit) {
+        _buffer[bufIndex] |= (0x80 >>> (_length % 8) );
+      }
+
+      _length += 1;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrNumber
+  //---------------------------------------------------------------------
+
+  var qrNumber = function(data) {
+
+    var _mode = QRMode.MODE_NUMBER;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _data;
+
+      var i = 0;
+
+      while (i + 2 < data.length) {
+        buffer.put(strToNum(data.substring(i, i + 3) ), 10);
+        i += 3;
+      }
+
+      if (i < data.length) {
+        if (data.length - i == 1) {
+          buffer.put(strToNum(data.substring(i, i + 1) ), 4);
+        } else if (data.length - i == 2) {
+          buffer.put(strToNum(data.substring(i, i + 2) ), 7);
+        }
+      }
+    };
+
+    var strToNum = function(s) {
+      var num = 0;
+      for (var i = 0; i < s.length; i += 1) {
+        num = num * 10 + chatToNum(s.charAt(i) );
+      }
+      return num;
+    };
+
+    var chatToNum = function(c) {
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      }
+      throw 'illegal char :' + c;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrAlphaNum
+  //---------------------------------------------------------------------
+
+  var qrAlphaNum = function(data) {
+
+    var _mode = QRMode.MODE_ALPHA_NUM;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var s = _data;
+
+      var i = 0;
+
+      while (i + 1 < s.length) {
+        buffer.put(
+          getCode(s.charAt(i) ) * 45 +
+          getCode(s.charAt(i + 1) ), 11);
+        i += 2;
+      }
+
+      if (i < s.length) {
+        buffer.put(getCode(s.charAt(i) ), 6);
+      }
+    };
+
+    var getCode = function(c) {
+
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      } else if ('A' <= c && c <= 'Z') {
+        return c.charCodeAt(0) - 'A'.charCodeAt(0) + 10;
+      } else {
+        switch (c) {
+        case ' ' : return 36;
+        case '$' : return 37;
+        case '%' : return 38;
+        case '*' : return 39;
+        case '+' : return 40;
+        case '-' : return 41;
+        case '.' : return 42;
+        case '/' : return 43;
+        case ':' : return 44;
+        default :
+          throw 'illegal char :' + c;
+        }
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qr8BitByte
+  //---------------------------------------------------------------------
+
+  var qr8BitByte = function(data) {
+
+    var _mode = QRMode.MODE_8BIT_BYTE;
+    var _data = data;
+    var _bytes = qrcode.stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _bytes.length;
+    };
+
+    _this.write = function(buffer) {
+      for (var i = 0; i < _bytes.length; i += 1) {
+        buffer.put(_bytes[i], 8);
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrKanji
+  //---------------------------------------------------------------------
+
+  var qrKanji = function(data) {
+
+    var _mode = QRMode.MODE_KANJI;
+    var _data = data;
+
+    var stringToBytes = qrcode.stringToBytesFuncs['SJIS'];
+    if (!stringToBytes) {
+      throw 'sjis not supported.';
+    }
+    !function(c, code) {
+      // self test for sjis support.
+      var test = stringToBytes(c);
+      if (test.length != 2 || ( (test[0] << 8) | test[1]) != code) {
+        throw 'sjis not supported.';
+      }
+    }('\u53cb', 0x9746);
+
+    var _bytes = stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return ~~(_bytes.length / 2);
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _bytes;
+
+      var i = 0;
+
+      while (i + 1 < data.length) {
+
+        var c = ( (0xff & data[i]) << 8) | (0xff & data[i + 1]);
+
+        if (0x8140 <= c && c <= 0x9FFC) {
+          c -= 0x8140;
+        } else if (0xE040 <= c && c <= 0xEBBF) {
+          c -= 0xC140;
+        } else {
+          throw 'illegal char at ' + (i + 1) + '/' + c;
+        }
+
+        c = ( (c >>> 8) & 0xff) * 0xC0 + (c & 0xff);
+
+        buffer.put(c, 13);
+
+        i += 2;
+      }
+
+      if (i < data.length) {
+        throw 'illegal char at ' + (i + 1);
+      }
+    };
+
+    return _this;
+  };
+
+  //=====================================================================
+  // GIF Support etc.
+  //
+
+  //---------------------------------------------------------------------
+  // byteArrayOutputStream
+  //---------------------------------------------------------------------
+
+  var byteArrayOutputStream = function() {
+
+    var _bytes = [];
+
+    var _this = {};
+
+    _this.writeByte = function(b) {
+      _bytes.push(b & 0xff);
+    };
+
+    _this.writeShort = function(i) {
+      _this.writeByte(i);
+      _this.writeByte(i >>> 8);
+    };
+
+    _this.writeBytes = function(b, off, len) {
+      off = off || 0;
+      len = len || b.length;
+      for (var i = 0; i < len; i += 1) {
+        _this.writeByte(b[i + off]);
+      }
+    };
+
+    _this.writeString = function(s) {
+      for (var i = 0; i < s.length; i += 1) {
+        _this.writeByte(s.charCodeAt(i) );
+      }
+    };
+
+    _this.toByteArray = function() {
+      return _bytes;
+    };
+
+    _this.toString = function() {
+      var s = '';
+      s += '[';
+      for (var i = 0; i < _bytes.length; i += 1) {
+        if (i > 0) {
+          s += ',';
+        }
+        s += _bytes[i];
+      }
+      s += ']';
+      return s;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64EncodeOutputStream
+  //---------------------------------------------------------------------
+
+  var base64EncodeOutputStream = function() {
+
+    var _buffer = 0;
+    var _buflen = 0;
+    var _length = 0;
+    var _base64 = '';
+
+    var _this = {};
+
+    var writeEncoded = function(b) {
+      _base64 += String.fromCharCode(encode(b & 0x3f) );
+    };
+
+    var encode = function(n) {
+      if (n < 0) {
+        // error.
+      } else if (n < 26) {
+        return 0x41 + n;
+      } else if (n < 52) {
+        return 0x61 + (n - 26);
+      } else if (n < 62) {
+        return 0x30 + (n - 52);
+      } else if (n == 62) {
+        return 0x2b;
+      } else if (n == 63) {
+        return 0x2f;
+      }
+      throw 'n:' + n;
+    };
+
+    _this.writeByte = function(n) {
+
+      _buffer = (_buffer << 8) | (n & 0xff);
+      _buflen += 8;
+      _length += 1;
+
+      while (_buflen >= 6) {
+        writeEncoded(_buffer >>> (_buflen - 6) );
+        _buflen -= 6;
+      }
+    };
+
+    _this.flush = function() {
+
+      if (_buflen > 0) {
+        writeEncoded(_buffer << (6 - _buflen) );
+        _buffer = 0;
+        _buflen = 0;
+      }
+
+      if (_length % 3 != 0) {
+        // padding
+        var padlen = 3 - _length % 3;
+        for (var i = 0; i < padlen; i += 1) {
+          _base64 += '=';
+        }
+      }
+    };
+
+    _this.toString = function() {
+      return _base64;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64DecodeInputStream
+  //---------------------------------------------------------------------
+
+  var base64DecodeInputStream = function(str) {
+
+    var _str = str;
+    var _pos = 0;
+    var _buffer = 0;
+    var _buflen = 0;
+
+    var _this = {};
+
+    _this.read = function() {
+
+      while (_buflen < 8) {
+
+        if (_pos >= _str.length) {
+          if (_buflen == 0) {
+            return -1;
+          }
+          throw 'unexpected end of file./' + _buflen;
+        }
+
+        var c = _str.charAt(_pos);
+        _pos += 1;
+
+        if (c == '=') {
+          _buflen = 0;
+          return -1;
+        } else if (c.match(/^\s$/) ) {
+          // ignore if whitespace.
+          continue;
+        }
+
+        _buffer = (_buffer << 6) | decode(c.charCodeAt(0) );
+        _buflen += 6;
+      }
+
+      var n = (_buffer >>> (_buflen - 8) ) & 0xff;
+      _buflen -= 8;
+      return n;
+    };
+
+    var decode = function(c) {
+      if (0x41 <= c && c <= 0x5a) {
+        return c - 0x41;
+      } else if (0x61 <= c && c <= 0x7a) {
+        return c - 0x61 + 26;
+      } else if (0x30 <= c && c <= 0x39) {
+        return c - 0x30 + 52;
+      } else if (c == 0x2b) {
+        return 62;
+      } else if (c == 0x2f) {
+        return 63;
+      } else {
+        throw 'c:' + c;
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // gifImage (B/W)
+  //---------------------------------------------------------------------
+
+  var gifImage = function(width, height) {
+
+    var _width = width;
+    var _height = height;
+    var _data = new Array(width * height);
+
+    var _this = {};
+
+    _this.setPixel = function(x, y, pixel) {
+      _data[y * _width + x] = pixel;
+    };
+
+    _this.write = function(out) {
+
+      //---------------------------------
+      // GIF Signature
+
+      out.writeString('GIF87a');
+
+      //---------------------------------
+      // Screen Descriptor
+
+      out.writeShort(_width);
+      out.writeShort(_height);
+
+      out.writeByte(0x80); // 2bit
+      out.writeByte(0);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Global Color Map
+
+      // black
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+
+      // white
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+
+      //---------------------------------
+      // Image Descriptor
+
+      out.writeString(',');
+      out.writeShort(0);
+      out.writeShort(0);
+      out.writeShort(_width);
+      out.writeShort(_height);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Local Color Map
+
+      //---------------------------------
+      // Raster Data
+
+      var lzwMinCodeSize = 2;
+      var raster = getLZWRaster(lzwMinCodeSize);
+
+      out.writeByte(lzwMinCodeSize);
+
+      var offset = 0;
+
+      while (raster.length - offset > 255) {
+        out.writeByte(255);
+        out.writeBytes(raster, offset, 255);
+        offset += 255;
+      }
+
+      out.writeByte(raster.length - offset);
+      out.writeBytes(raster, offset, raster.length - offset);
+      out.writeByte(0x00);
+
+      //---------------------------------
+      // GIF Terminator
+      out.writeString(';');
+    };
+
+    var bitOutputStream = function(out) {
+
+      var _out = out;
+      var _bitLength = 0;
+      var _bitBuffer = 0;
+
+      var _this = {};
+
+      _this.write = function(data, length) {
+
+        if ( (data >>> length) != 0) {
+          throw 'length over';
+        }
+
+        while (_bitLength + length >= 8) {
+          _out.writeByte(0xff & ( (data << _bitLength) | _bitBuffer) );
+          length -= (8 - _bitLength);
+          data >>>= (8 - _bitLength);
+          _bitBuffer = 0;
+          _bitLength = 0;
+        }
+
+        _bitBuffer = (data << _bitLength) | _bitBuffer;
+        _bitLength = _bitLength + length;
+      };
+
+      _this.flush = function() {
+        if (_bitLength > 0) {
+          _out.writeByte(_bitBuffer);
+        }
+      };
+
+      return _this;
+    };
+
+    var getLZWRaster = function(lzwMinCodeSize) {
+
+      var clearCode = 1 << lzwMinCodeSize;
+      var endCode = (1 << lzwMinCodeSize) + 1;
+      var bitLength = lzwMinCodeSize + 1;
+
+      // Setup LZWTable
+      var table = lzwTable();
+
+      for (var i = 0; i < clearCode; i += 1) {
+        table.add(String.fromCharCode(i) );
+      }
+      table.add(String.fromCharCode(clearCode) );
+      table.add(String.fromCharCode(endCode) );
+
+      var byteOut = byteArrayOutputStream();
+      var bitOut = bitOutputStream(byteOut);
+
+      // clear code
+      bitOut.write(clearCode, bitLength);
+
+      var dataIndex = 0;
+
+      var s = String.fromCharCode(_data[dataIndex]);
+      dataIndex += 1;
+
+      while (dataIndex < _data.length) {
+
+        var c = String.fromCharCode(_data[dataIndex]);
+        dataIndex += 1;
+
+        if (table.contains(s + c) ) {
+
+          s = s + c;
+
+        } else {
+
+          bitOut.write(table.indexOf(s), bitLength);
+
+          if (table.size() < 0xfff) {
+
+            if (table.size() == (1 << bitLength) ) {
+              bitLength += 1;
+            }
+
+            table.add(s + c);
+          }
+
+          s = c;
+        }
+      }
+
+      bitOut.write(table.indexOf(s), bitLength);
+
+      // end code
+      bitOut.write(endCode, bitLength);
+
+      bitOut.flush();
+
+      return byteOut.toByteArray();
+    };
+
+    var lzwTable = function() {
+
+      var _map = {};
+      var _size = 0;
+
+      var _this = {};
+
+      _this.add = function(key) {
+        if (_this.contains(key) ) {
+          throw 'dup key:' + key;
+        }
+        _map[key] = _size;
+        _size += 1;
+      };
+
+      _this.size = function() {
+        return _size;
+      };
+
+      _this.indexOf = function(key) {
+        return _map[key];
+      };
+
+      _this.contains = function(key) {
+        return typeof _map[key] != 'undefined';
+      };
+
+      return _this;
+    };
+
+    return _this;
+  };
+
+  var createDataURL = function(width, height, getPixel) {
+    var gif = gifImage(width, height);
+    for (var y = 0; y < height; y += 1) {
+      for (var x = 0; x < width; x += 1) {
+        gif.setPixel(x, y, getPixel(x, y) );
+      }
+    }
+
+    var b = byteArrayOutputStream();
+    gif.write(b);
+
+    var base64 = base64EncodeOutputStream();
+    var bytes = b.toByteArray();
+    for (var i = 0; i < bytes.length; i += 1) {
+      base64.writeByte(bytes[i]);
+    }
+    base64.flush();
+
+    return 'data:image/gif;base64,' + base64;
+  };
+
+  //---------------------------------------------------------------------
+  // returns qrcode function.
+
+  return qrcode;
+}();
+
+// multibyte support
+!function() {
+
+  qrcode.stringToBytesFuncs['UTF-8'] = function(s) {
+    // http://stackoverflow.com/questions/18729405/how-to-convert-utf8-string-to-byte-array
+    function toUTF8Array(str) {
+      var utf8 = [];
+      for (var i=0; i < str.length; i++) {
+        var charcode = str.charCodeAt(i);
+        if (charcode < 0x80) utf8.push(charcode);
+        else if (charcode < 0x800) {
+          utf8.push(0xc0 | (charcode >> 6),
+              0x80 | (charcode & 0x3f));
+        }
+        else if (charcode < 0xd800 || charcode >= 0xe000) {
+          utf8.push(0xe0 | (charcode >> 12),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+        // surrogate pair
+        else {
+          i++;
+          // UTF-16 encodes 0x10000-0x10FFFF by
+          // subtracting 0x10000 and splitting the
+          // 20 bits of 0x0-0xFFFFF into two halves
+          charcode = 0x10000 + (((charcode & 0x3ff)<<10)
+            | (str.charCodeAt(i) & 0x3ff));
+          utf8.push(0xf0 | (charcode >>18),
+              0x80 | ((charcode>>12) & 0x3f),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+      }
+      return utf8;
+    }
+    return toUTF8Array(s);
+  };
+
+}();
+
+(function (factory) {
+  if (typeof define === 'function' && define.amd) {
+      define([], factory);
+  } else if (typeof exports === 'object') {
+      module.exports = factory();
+  }
+}(function () {
+    return qrcode;
+}));
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@4.0.1/dist/pptxgen.bundle.js"></script>
+<script>
+/*
+ * B.U.T. TOKYO 2026 — 프로그램 설정 (일정 · 미션 · 성찰 질문 · 주제 · 디자인 토큰)
+ * 이 파일 하나만 고치면 학생 웹앱, 관리자 페이지, 모든 결과물에 반영됩니다.
+ * (Apps Script · 브라우저 · Node 공용 파일: ES2019 문법만 사용)
+ */
+var BUT_Program = (function () {
+  var program = {
+    code: 'BUT-TOKYO-2026',
+    brand: 'B.U.T. TOKYO 2026',
+    brandFull: 'Beyond Universal Togetherness',
+    title: '벗과 함께 도쿄를 기록하다',
+    subtitle: '2026학년도 한일 고등학생 국제교류 국외현장체험학습',
+    schoolName: '○○고등학교', // ← 학교명으로 바꾸세요
+    period: '2026. 12. 7.(월) – 12. 10.(목) · 3박 4일',
+    participants: 20,
+    timeZone: 'Asia/Tokyo',
+    hotel: '신주쿠 워싱턴호텔',
+
+    // 제출 규칙
+    rules: {
+      minPhotos: 1,
+      maxPhotos: 3,
+      maxOriginalBytes: 20 * 1024 * 1024, // 원본 1장 최대 20MB
+      maxDisplayBytes: 4 * 1024 * 1024,
+      displayMaxEdge: 2000, // 출력용 사본 긴 변 픽셀
+      reflectionMin: 30,
+      reflectionMax: 1000,
+      essayMin: 100,
+      essayMax: 3000,
+      oneLineMax: 30,
+      captionMax: 40,
+      studentIdPattern: '^[0-9A-Za-z-]{1,12}$',
+      pinPattern: '^[0-9]{4,6}$',
+      loginMaxFails: 5,
+      loginLockMinutes: 60, // 5회 실패 시 60분 잠금 (4자리 PIN 무차별 대입 방지)
+      studentTokenHours: 24 * 7,
+      adminTokenHours: 8
+    },
+
+    days: [
+      {
+        day: 1,
+        date: '2026-12-07',
+        dateLabel: '12.07',
+        weekday: '월',
+        weekdayEn: 'MON',
+        theme: '도쿄의 첫인상',
+        themeSub: '도시와 청소년 문화',
+        places: ['도쿄타워', '시부야', '하라주쿠'],
+        missions: [
+          '한국의 도시와 다른 풍경 발견하기',
+          '일본의 10대 문화를 보여주는 장면 기록하기'
+        ],
+        question: '일본에 오기 전의 이미지와 직접 경험한 일본은 어떻게 달랐나요?',
+        sampleOneLine: '낯선 도시에서 발견한 익숙함',
+        color: '#C2432F',
+        schedule: [
+          ['08:05', '인천국제공항 출발 (진에어 LJ235)'],
+          ['10:45', '나리타국제공항 도착 및 입국수속'],
+          ['12:30', '중식'],
+          ['13:30', '도쿄 시내로 이동'],
+          ['15:00', '도쿄타워 전파탑'],
+          ['17:00', '시부야·하라주쿠 10대 문화거리 탐방'],
+          ['18:30', '석식'],
+          ['20:00', '숙소 도착 및 휴식']
+        ]
+      },
+      {
+        day: 2,
+        date: '2026-12-08',
+        dateLabel: '12.08',
+        weekday: '화',
+        weekdayEn: 'TUE',
+        theme: '즐거움 속에서 발견하는 일본',
+        themeSub: '대중교통과 공간 디자인',
+        places: ['대중교통', '도쿄 디즈니랜드'],
+        missions: [
+          '일본 대중교통의 안내 및 배려 문화 발견하기',
+          '방문객을 위한 서비스나 공간 디자인 관찰하기'
+        ],
+        question: '오늘 경험한 공간에서 우리 학교나 지역사회에도 적용하고 싶은 아이디어는 무엇인가요?',
+        sampleOneLine: '작은 배려가 만드는 즐거움',
+        color: '#2F5D8C',
+        schedule: [
+          ['06:00', '기상 및 호텔 조식'],
+          ['08:00', '지하철로 이동 (신주쿠역 – 도쿄역 – 마이하마역)'],
+          ['09:00', '도쿄 디즈니랜드 탐방 (전일 자유이용권)'],
+          ['20:00', '숙소 도착 및 휴식']
+        ]
+      },
+      {
+        day: 3,
+        date: '2026-12-09',
+        dateLabel: '12.09',
+        weekday: '수',
+        weekdayEn: 'WED',
+        theme: '국경을 넘어 벗이 되다',
+        themeSub: '자매학교 교류',
+        places: ['도쿄도립 남평고등학교', '도쿄도청'],
+        missions: [
+          '일본 친구와 나의 공통점과 차이점 발견하기',
+          '일본 친구와 소통하며 기억에 남은 순간 기록하기'
+        ],
+        question: '일본 친구들과 직접 교류하면서 새롭게 알게 된 점과 앞으로 이어가고 싶은 교류는 무엇인가요?',
+        sampleOneLine: '언어가 달라도 친구가 될 수 있다',
+        color: '#4F7A5A',
+        schedule: [
+          ['06:00', '기상 및 호텔 조식'],
+          ['08:00', '자매학교로 이동 (전용버스)'],
+          ['09:00', '자매학교 공식 방문 · 도쿄도립 남평고등학교'],
+          ['17:00', '도쿄도청 전망대 — 시내 전경 및 야경 감상'],
+          ['20:00', '숙소 도착 및 휴식']
+        ]
+      },
+      {
+        day: 4,
+        date: '2026-12-10',
+        dateLabel: '12.10',
+        weekday: '목',
+        weekdayEn: 'THU',
+        theme: '전통과 미래, 그리고 나의 성장',
+        themeSub: '대학 탐방과 전통문화',
+        places: ['도쿄대학교', '아사쿠사 센소지', '나카미세 도오리'],
+        missions: [
+          '대학생과의 질의응답에서 인상 깊었던 내용 기록하기',
+          '일본의 전통문화가 현대에 이어지는 모습 발견하기'
+        ],
+        question: '이번 국외현장체험학습은 나의 진로, 가치관, 다른 문화에 대한 태도에 어떤 변화를 가져왔나요?',
+        sampleOneLine: '더 넓은 세상을 꿈꾸게 된 날',
+        color: '#8A5A3C',
+        schedule: [
+          ['06:00', '기상 및 호텔 조식'],
+          ['10:00', '도쿄대학 방문 — 한인 재학생과 캠퍼스 투어 및 질의응답'],
+          ['12:00', '중식'],
+          ['13:00', '아사쿠사 센소지 & 나카미세 도오리'],
+          ['15:00', '나리타국제공항으로 이동 및 탑승수속'],
+          ['18:50', '나리타국제공항 출발 (진에어 LJ264)'],
+          ['21:40', '인천국제공항 도착']
+        ]
+      }
+    ],
+
+    // 주제별 포스터: 교사가 태그를 지정하지 않으면 키워드로 자동 분류
+    topics: [
+      {
+        key: 'friend',
+        title: '벗',
+        en: 'FRIENDSHIP',
+        desc: '말이 서툴러도 마음은 통했다 — 국경을 넘어 친구가 된 순간들',
+        color: '#4F7A5A',
+        keywords: ['친구', '벗', '교류', '대화', '소통', '함께', '우정', '자매학교', '번역', '인사', '선물', '웃']
+      },
+      {
+        key: 'discover',
+        title: '발견',
+        en: 'DISCOVERY',
+        desc: '낯선 도시에서 처음 마주한 풍경과 문화',
+        color: '#C2432F',
+        keywords: ['발견', '처음', '새롭', '신기', '다르', '차이', '풍경', '거리', '문화', '시부야', '하라주쿠', '도쿄타워', '야경']
+      },
+      {
+        key: 'care',
+        title: '배려',
+        en: 'CONSIDERATION',
+        desc: '작은 안내판과 친절에서 배운 함께 사는 법',
+        color: '#2F5D8C',
+        keywords: ['배려', '질서', '친절', '안내', '서비스', '디자인', '깨끗', '조용', '줄', '표지', '대중교통', '지하철']
+      },
+      {
+        key: 'grow',
+        title: '성장',
+        en: 'GROWTH',
+        desc: '전통과 미래 사이에서 그려 본 나의 다음 걸음',
+        color: '#8A5A3C',
+        keywords: ['꿈', '진로', '성장', '변화', '미래', '목표', '대학', '전통', '공부', '도전', '나의', '생각이 바뀌']
+      }
+    ],
+
+    design: {
+      paper: '#F5F0E6',
+      paperDeep: '#EBE3D3',
+      card: '#FBF8F2',
+      ink: '#23303F',
+      inkSoft: '#5B6573',
+      line: '#CFCABC',
+      accent: '#C2432F',
+      indigo: '#2F4A6D',
+      sage: '#A9AE9A',
+      gold: '#B8925A',
+      fonts: {
+        title: 'Gowun Dodum',
+        body: 'Gowun Batang',
+        label: 'Gowun Dodum'
+      }
+    }
+  };
+
+  function getDay(n) {
+    for (var i = 0; i < program.days.length; i++) if (program.days[i].day === Number(n)) return program.days[i];
+    return null;
+  }
+  function pad2(n) {
+    n = String(n);
+    return n.length < 2 ? '0' + n : n;
+  }
+  function dayLabel(n) {
+    return 'DAY ' + pad2(n);
+  }
+
+  return { program: program, getDay: getDay, pad2: pad2, dayLabel: dayLabel };
+})();
+
+if (typeof module !== 'undefined' && module.exports) module.exports = BUT_Program;
+
+</script>
+<script>
+/*
+ * B.U.T. TOKYO 2026 — 결과물 레이아웃 엔진
+ * 데이터셋(core.buildDataset) → 문서 모델(페이지·요소 좌표 mm) → HTML/PDF · PPTX 렌더러
+ * 줄바꿈과 글자 크기를 여기서 계산하므로 HTML·PDF·PPTX의 배치가 같습니다.
+ *
+ * 문서 모델: { name, size:{w,h}(mm), pages:[{ bg, els:[요소...] }] }
+ *  rect  {t:'rect', x,y,w,h, fill, stroke, sw, r, op, rot}
+ *  ellipse {t:'ellipse', x,y,w,h, fill, stroke, sw, rot}
+ *  line  {t:'line', x1,y1,x2,y2, color, sw, dash}
+ *  text  {t:'text', x,y,w,h, text(줄바꿈 포함), pt, font, color, bold, align, valign, lh, ls, rot}
+ *  img   {t:'img', x,y,w,h, src(사진ID), iw, ih, r}
+ *  qr    {t:'qr', x,y,w,h, data}
+ */
+var BUT_Layout = (function () {
+  var P = typeof BUT_Program !== 'undefined' ? BUT_Program : require('./program.js');
+  var program = P.program;
+  var D = program.design;
+  var PT = 0.3528; // 1pt = 0.3528mm
+
+  var SIZES = {
+    A1: { w: 594, h: 841 },
+    A4: { w: 210, h: 297 },
+    A5: { w: 148, h: 210 }
+  };
+
+  // ------------------------------------------------------------ 글자 폭 추정 (Gowun Dodum/Batang 실측 + 여유)
+  function charEm(ch) {
+    var c = ch.charCodeAt(0);
+    if (c === 32 || c === 160) return 0.33;
+    if (c >= 0x1100 && c <= 0x11ff) return 0.92;
+    if (c >= 0x3000 && c <= 0x9fff) return 0.94;
+    if (c >= 0xac00 && c <= 0xd7af) return 0.92;
+    if (c >= 0xff00 && c <= 0xffef) return 0.94;
+    if (c >= 48 && c <= 57) return 0.56;
+    if (c >= 65 && c <= 90) return 0.68;
+    if (c >= 97 && c <= 122) return 0.52;
+    if (c < 128) return 0.42;
+    if (c >= 0x2460 && c <= 0x24ff) return 0.95; // ①
+    return 0.95; // 이모지 등
+  }
+  function textWidth(s, pt, ls) {
+    var em = 0, n = 0;
+    for (var i = 0; i < s.length; i++) {
+      var code = s.charCodeAt(i);
+      if (code >= 0xd800 && code <= 0xdbff) { em += 1.1; i++; n++; continue; } // 서로게이트(이모지)
+      em += charEm(s[i]);
+      n++;
+    }
+    return em * pt * PT + n * (ls || 0) * PT;
+  }
+
+  function wrap(text, width, pt, ls) {
+    var out = [];
+    String(text || '').split('\n').forEach(function (para) {
+      var tokens = para.split(/(\s+)/);
+      var line = '';
+      tokens.forEach(function (tok) {
+        if (tok === '') return;
+        if (/^\s+$/.test(tok)) {
+          if (line) line += ' ';
+          return;
+        }
+        var cand = line + tok;
+        if (textWidth(cand, pt, ls) <= width) { line = cand; return; }
+        if (line.trim()) { out.push(line.replace(/\s+$/, '')); line = ''; }
+        // 단어가 한 줄보다 길면 글자 단위로 자름
+        var chars = Array.from(tok);
+        chars.forEach(function (ch) {
+          if (textWidth(line + ch, pt, ls) > width && line) { out.push(line); line = ''; }
+          line += ch;
+        });
+      });
+      out.push(line.replace(/\s+$/, ''));
+    });
+    return out;
+  }
+
+  function ellipsize(line, width, pt, ls) {
+    var chars = Array.from(line);
+    while (chars.length && textWidth(chars.join('') + '…', pt, ls) > width) chars.pop();
+    return chars.join('').replace(/[\s,.]+$/, '') + '…';
+  }
+
+  // 상자(w×h mm)에 맞는 가장 큰 글자 크기를 찾고 줄바꿈된 텍스트를 반환
+  function fit(text, w, h, o) {
+    var max = o.pt, min = o.min || o.pt, lh = o.lh || 1.4, ls = o.ls || 0;
+    var maxLines = o.maxLines || 999;
+    for (var pt = max; pt >= min - 0.001; pt -= Math.max(0.5, max / 40)) {
+      var lines = wrap(text, w, pt, ls);
+      var lineH = pt * PT * lh;
+      if (lines.length <= maxLines && lines.length * lineH <= h + 0.01) return { pt: round(pt), lines: lines };
+    }
+    var lines2 = wrap(text, w, min, ls);
+    var cap = Math.max(1, Math.min(maxLines, Math.floor((h + 0.01) / (min * PT * lh))));
+    if (lines2.length > cap) {
+      lines2 = lines2.slice(0, cap);
+      lines2[cap - 1] = ellipsize(lines2[cap - 1], w, min, ls);
+    }
+    return { pt: round(min), lines: lines2, truncated: true };
+  }
+  function round(v) { return Math.round(v * 100) / 100; }
+
+  // ------------------------------------------------------------ 페이지 빌더 (scale: A5 기준 좌표를 A4로 키울 때 사용)
+  function Page(doc, bg, scale) {
+    this.doc = doc;
+    this.s = scale || 1;
+    this.els = [];
+    this.bg = bg || D.paper;
+    doc.pages.push(this);
+  }
+  Page.prototype.rect = function (x, y, w, h, o) {
+    o = o || {};
+    var s = this.s;
+    this.els.push({ t: 'rect', x: x * s, y: y * s, w: w * s, h: h * s, fill: o.fill || null, stroke: o.stroke || null, sw: (o.sw || 0) * s, r: (o.r || 0) * s, op: o.op === undefined ? 1 : o.op, rot: o.rot || 0 });
+    return this;
+  };
+  Page.prototype.ellipse = function (x, y, w, h, o) {
+    o = o || {};
+    var s = this.s;
+    this.els.push({ t: 'ellipse', x: x * s, y: y * s, w: w * s, h: h * s, fill: o.fill || null, stroke: o.stroke || null, sw: (o.sw || 0) * s, op: o.op === undefined ? 1 : o.op, rot: o.rot || 0 });
+    return this;
+  };
+  Page.prototype.line = function (x1, y1, x2, y2, o) {
+    o = o || {};
+    var s = this.s;
+    this.els.push({ t: 'line', x1: x1 * s, y1: y1 * s, x2: x2 * s, y2: y2 * s, color: o.color || D.line, sw: (o.sw || 0.3) * s, dash: !!o.dash });
+    return this;
+  };
+  // text: o = {pt, min, font, color, bold, align, valign, lh, ls, maxLines, rot}
+  Page.prototype.text = function (x, y, w, h, text, o) {
+    o = o || {};
+    var s = this.s;
+    var lh = o.lh || 1.35;
+    var r = fit(text, w * s, h * s, { pt: o.pt * s, min: (o.min || o.pt) * s, lh: lh, ls: (o.ls || 0) * s, maxLines: o.maxLines });
+    this.els.push({
+      t: 'text', x: x * s, y: y * s, w: w * s, h: h * s, text: r.lines.join('\n'), pt: r.pt,
+      font: o.font || 'title', color: o.color || D.ink, bold: !!o.bold, align: o.align || 'left',
+      valign: o.valign || 'top', lh: lh, ls: (o.ls || 0) * s, rot: o.rot || 0
+    });
+    return r;
+  };
+  Page.prototype.img = function (x, y, w, h, photo, o) {
+    o = o || {};
+    var s = this.s;
+    if (!photo) return this.placeholder(x, y, w, h, o);
+    this.els.push({ t: 'img', x: x * s, y: y * s, w: w * s, h: h * s, src: photo.id, iw: photo.w || 4, ih: photo.h || 3, r: (o.r || 0) * s });
+    return this;
+  };
+  Page.prototype.placeholder = function (x, y, w, h, o) {
+    o = o || {};
+    this.rect(x, y, w, h, { fill: D.paperDeep, r: o.r || 0 });
+    this.text(x, y + h / 2 - 4, w, 8, o.label || 'B.U.T.', { pt: Math.min(14, Math.max(6, h / 6)), color: D.sage, align: 'center', valign: 'middle', ls: 2 });
+    return this;
+  };
+  Page.prototype.qr = function (x, y, w, data) {
+    var s = this.s;
+    this.els.push({ t: 'qr', x: x * s, y: y * s, w: w * s, h: w * s, data: data });
+    return this;
+  };
+  Page.prototype.toJSON = function () { return { bg: this.bg, els: this.els }; };
+
+  function newDoc(name, sizeKey) {
+    return { name: name, sizeKey: sizeKey, size: SIZES[sizeKey], pages: [] };
+  }
+  function finalize(doc) {
+    return { name: doc.name, sizeKey: doc.sizeKey, size: doc.size, pages: doc.pages.map(function (p) { return p.toJSON(); }) };
+  }
+
+  // ------------------------------------------------------------ 데이터 헬퍼
+  function byDay(ds, day) { return ds.entries.filter(function (e) { return e.day === day; }); }
+  function photoIndex(ds) {
+    var m = {};
+    ds.entries.forEach(function (e) { e.photos.forEach(function (p) { m[p.id] = { photo: p, entry: e }; }); });
+    return m;
+  }
+  function featured(e) {
+    if (!e || !e.photos.length) return null;
+    for (var i = 0; i < e.photos.length; i++) if (e.photos[i].id === e.featuredPhotoId) return e.photos[i];
+    return e.photos[0];
+  }
+  function dayHero(ds, day) {
+    var idx = photoIndex(ds);
+    var h = ds.heroes && ds.heroes[day];
+    if (h && idx[h] && idx[h].entry.day === day) return idx[h];
+    var list = byDay(ds, day);
+    for (var i = 0; i < list.length; i++) for (var j = 0; j < list[i].photos.length; j++) if (list[i].photos[j].exhibit) return { photo: list[i].photos[j], entry: list[i] };
+    for (var k = 0; k < list.length; k++) if (featured(list[k])) return { photo: featured(list[k]), entry: list[k] };
+    return null;
+  }
+  function sentences(text) {
+    return String(text || '').replace(/\s+/g, ' ').split(/(?<=[.!?。~])\s+/).map(function (s) { return s.trim(); }).filter(Boolean);
+  }
+  function excerpt(text, keywords, max) {
+    // 주제어가 들어간 문장(없으면 첫 문장)부터 max 글자 안에서 이어지는 문장을 함께 인용
+    var ss = sentences(text);
+    var start = -1;
+    if (keywords) {
+      for (var i = 0; i < ss.length && start < 0; i++) {
+        for (var k = 0; k < keywords.length; k++) if (ss[i].indexOf(keywords[k]) >= 0 && Array.from(ss[i]).length >= 15) { start = i; break; }
+      }
+    }
+    if (start < 0) for (var j = 0; j < ss.length && start < 0; j++) if (Array.from(ss[j]).length >= 15) start = j;
+    if (start < 0) start = 0;
+    var pick = ss[start] || '';
+    for (var n = start + 1; n < ss.length; n++) {
+      if (Array.from(pick + ' ' + ss[n]).length > max) break;
+      pick += ' ' + ss[n];
+    }
+    var chars = Array.from(pick);
+    if (chars.length > max) pick = chars.slice(0, max - 1).join('').replace(/\s+\S*$/, '') + '…';
+    return pick;
+  }
+  function meta(e) {
+    var d = P.getDay(e.day);
+    return e.displayName + ' / ' + d.dateLabel;
+  }
+  function topicOf(key) {
+    for (var i = 0; i < program.topics.length; i++) if (program.topics[i].key === key) return program.topics[i];
+    return null;
+  }
+
+  // ------------------------------------------------------------ 공통 장식
+  function frame(pg, W, H, inset, label, right) {
+    pg.rect(inset, inset, W - inset * 2, H - inset * 2, { stroke: D.line, sw: 0.35 });
+    return pg;
+  }
+  function stamp(pg, x, y, d, text, color, rot) {
+    pg.ellipse(x, y, d, d, { fill: D.paper, stroke: color, sw: d * 0.03, rot: rot || 0 });
+    pg.ellipse(x + d * 0.08, y + d * 0.08, d * 0.84, d * 0.84, { stroke: color, sw: d * 0.008, rot: rot || 0 });
+    var n = Array.from(text).length;
+    var pt = (d * (n > 1 ? 0.62 / n : 0.55)) / PT / 0.92;
+    pg.text(x, y + d / 2 - (pt * PT * 1.1) / 2, d, pt * PT * 1.15, text, { pt: pt, color: color, bold: true, align: 'center', valign: 'middle', lh: 1.1, rot: rot || 0 });
+  }
+  function washi(pg, x, y, w, h, color, rot) {
+    pg.rect(x, y, w, h, { fill: color, op: 0.55, rot: rot || 0 });
+  }
+  function decoLines(pg, x, y, w, gap, color) {
+    pg.line(x, y, x + w, y, { color: color || D.line, sw: 0.5 });
+    pg.line(x, y + gap, x + w, y + gap, { color: color || D.line, sw: 0.5 });
+    pg.line(x, y + gap * 2, x + w * 0.62, y + gap * 2, { color: color || D.line, sw: 0.5 });
+  }
+
+  // 예시 이미지(Canva 카드)와 같은 구성의 기록 카드. 기준 크기 98×103mm, k배로 확대/축소
+  function recordCard(pg, x, y, w, h, e, o) {
+    o = o || {};
+    var d = P.getDay(e.day);
+    var k = h / 103;
+    var pad = 6 * k;
+    pg.rect(x, y, w, h, { fill: D.card, stroke: D.line, sw: 0.3 * k, r: 3.5 * k });
+    pg.text(x + pad, y + 4.5 * k, w - pad * 2, 4.5 * k, program.brand, { pt: 9 * k, color: D.inkSoft, ls: 0.8 * k });
+    if (o.showDay) pg.text(x + pad, y + 9.5 * k, w - pad * 2, 9 * k, P.dayLabel(e.day), { pt: 20 * k, bold: true, color: D.ink });
+    var py = y + (o.showDay ? 20 : 11) * k;
+    var ph = (o.showDay ? 47 : 52) * k;
+    pg.img(x + pad, py, w - pad * 2, ph, featured(e), { r: 3.5 * k, label: '사진 비공개' });
+    pg.text(x + pad, py + ph + 3.5 * k, w - pad * 2, 17 * k, e.oneLine, { pt: 17 * k, min: 11 * k, bold: true, lh: 1.32, maxLines: 2, color: D.ink });
+    pg.text(x + pad, y + 86 * k, w - pad * 2, 5 * k, meta(e), { pt: 11 * k, color: D.inkSoft, ls: 0.4 * k });
+    decoLines(pg, x + pad, y + 93.5 * k, w - pad * 2, 2.6 * k, D.line);
+  }
+
+  function topBar(pg, W, m, y, pt, right) {
+    pg.text(m, y, W / 2, pt * PT * 1.4, program.brand, { pt: pt, color: D.ink, ls: pt * 0.15, bold: true });
+    pg.text(W / 2, y, W / 2 - m, pt * PT * 1.4, right || program.brandFull.toUpperCase(), { pt: pt * 0.75, color: D.inkSoft, ls: pt * 0.12, align: 'right', valign: 'middle' });
+    pg.line(m, y + pt * PT * 1.9, W - m, y + pt * PT * 1.9, { color: D.ink, sw: pt * 0.02 });
+  }
+  function footer(pg, W, H, m, left, right, pt) {
+    var y = H - m - pt * PT * 1.5;
+    pg.line(m, y - 3, W - m, y - 3, { color: D.line, sw: 0.4 });
+    pg.text(m, y, W * 0.65, pt * PT * 1.5, left, { pt: pt, color: D.inkSoft });
+    pg.text(W * 0.5, y, W * 0.5 - m, pt * PT * 1.5, right, { pt: pt, color: D.inkSoft, align: 'right' });
+  }
+  function chips(pg, x, y, maxW, items, pt, color) {
+    var cx = x, h = pt * PT * 1.9;
+    items.forEach(function (it) {
+      var w = textWidth(it, pt, 0) + pt * PT * 1.8;
+      if (cx + w > x + maxW) return;
+      pg.rect(cx, y, w, h, { stroke: color, sw: pt * 0.012, r: h / 2 });
+      pg.text(cx, y + (h - pt * PT * 1.3) / 2, w, pt * PT * 1.3, it, { pt: pt, color: color, align: 'center', lh: 1.25 });
+      cx += w + pt * PT * 0.8;
+    });
+  }
+
+  // ============================================================ 1. 날짜별 A1 포스터
+  function dayPoster(ds, day) {
+    var d = P.getDay(day);
+    var doc = newDoc('DAY' + P.pad2(day) + '_A1_포스터', 'A1');
+    var W = 594, H = 841, m = 34;
+    var pg = new Page(doc, D.paper);
+    frame(pg, W, H, 14);
+    topBar(pg, W, m, 26, 22, program.title + '  ·  ' + program.brandFull.toUpperCase());
+
+    // 왼쪽 머리글
+    var lx = m, lw = 300;
+    pg.text(lx, 56, lw, 16, 'DAY', { pt: 40, bold: true, color: d.color, ls: 8 });
+    pg.text(lx - 3, 66, lw, 86, P.pad2(day), { pt: 230, bold: true, color: d.color, lh: 1.05 });
+    pg.text(lx, 156, lw, 12, '2026. ' + d.dateLabel.replace('.', '. ') + '  ' + d.weekdayEn + '  ·  ' + d.weekday + '요일', { pt: 26, color: D.inkSoft, ls: 2 });
+    pg.text(lx, 173, lw, 30, d.theme, { pt: 64, min: 40, bold: true, color: D.ink, lh: 1.15, maxLines: 1 });
+    pg.text(lx, 203, lw, 14, d.themeSub, { pt: 32, color: D.inkSoft });
+    chips(pg, lx, 222, lw, d.places, 22, d.color);
+
+    pg.rect(lx, 244, lw, 62, { fill: D.card, stroke: D.line, sw: 0.4, r: 4 });
+    pg.text(lx + 9, 250, 100, 8, 'MISSION', { pt: 17, bold: true, color: d.color, ls: 4 });
+    pg.text(lx + 9, 261, lw - 18, 20, '①  ' + d.missions[0], { pt: 24, min: 18, color: D.ink, lh: 1.3, maxLines: 2 });
+    pg.text(lx + 9, 282, lw - 18, 20, '②  ' + d.missions[1], { pt: 24, min: 18, color: D.ink, lh: 1.3, maxLines: 2 });
+
+    pg.text(lx, 313, 120, 8, '성찰 질문  REFLECTION', { pt: 16, bold: true, color: d.color, ls: 2 });
+    pg.text(lx, 322, lw, 24, d.question, { pt: 25, min: 18, font: 'body', color: D.ink, lh: 1.4 });
+
+    // 오른쪽 대표 사진
+    var hx = 354, hw = W - m - hx, hy = 58, hh = 270;
+    var hero = dayHero(ds, day);
+    pg.img(hx, hy, hw, hh, hero && hero.photo, { r: 6, label: 'DAY ' + P.pad2(day) });
+    washi(pg, hx + hw / 2 - 34, hy - 7, 68, 14, d.color, -4);
+    stamp(pg, hx + hw - 36, hy + hh - 36, 50, '벗', D.accent, -8);
+    if (hero) pg.text(hx, hy + hh + 3, hw - 40, 7, (hero.photo.caption ? hero.photo.caption + '  ·  ' : '') + 'photo by ' + hero.entry.displayName, { pt: 14, color: D.inkSoft, align: 'right' });
+
+    // 학생 기록 그리드
+    var entries = byDay(ds, day);
+    var gy = 356, gh = 436, gx = m, gw = W - m * 2;
+    var cols = 5, gap = 8;
+    var rows = Math.max(1, Math.ceil(entries.length / cols));
+    if (rows > 4) { cols = 6; rows = Math.ceil(entries.length / cols); }
+    var cw = (gw - gap * (cols - 1)) / cols;
+    var ch = Math.min(103 * (cw / 98.8), (gh - gap * (rows - 1)) / rows);
+    cw = Math.min(cw, ch * (98.8 / 103));
+    var offX = gx + (gw - (cw * cols + gap * (cols - 1))) / 2;
+    entries.forEach(function (e, i) {
+      var c = i % cols, r = Math.floor(i / cols);
+      recordCard(pg, offX + c * (cw + gap), gy + r * (ch + gap), cw, ch, e);
+    });
+    if (!entries.length) pg.text(gx, gy + 150, gw, 20, '아직 제출된 기록이 없습니다.', { pt: 36, color: D.sage, align: 'center' });
+
+    footer(pg, W, H, m, program.schoolName + '  ·  ' + program.subtitle, 'DAY ' + P.pad2(day) + ' / 04  ·  학생 기록 ' + entries.length + '편', 15);
+    return finalize(doc);
+  }
+
+  // ============================================================ 2. 주제별 A1 포스터
+  function pickForTopic(ds, key, n) {
+    var list = ds.entries.filter(function (e) { return e.topics.indexOf(key) >= 0; });
+    list.sort(function (a, b) {
+      var sa = (a.photos.some(function (p) { return p.exhibit; }) ? 4 : 0) + (a.reviewStatus === 'approved' ? 2 : 0) + (featured(a) ? 1 : 0) + Math.min(Array.from(a.essay).length / 1000, 1);
+      var sb = (b.photos.some(function (p) { return p.exhibit; }) ? 4 : 0) + (b.reviewStatus === 'approved' ? 2 : 0) + (featured(b) ? 1 : 0) + Math.min(Array.from(b.essay).length / 1000, 1);
+      return sb - sa;
+    });
+    // 학생이 겹치지 않도록 우선 선택
+    var used = {}, out = [], rest = [];
+    list.forEach(function (e) { if (!used[e.studentId]) { used[e.studentId] = 1; out.push(e); } else rest.push(e); });
+    return { picked: out.concat(rest).slice(0, n), total: list.length, students: Object.keys(used).length };
+  }
+
+  function topicPoster(ds, key) {
+    var t = topicOf(key);
+    var doc = newDoc('주제_' + t.title + '_A1_포스터', 'A1');
+    var W = 594, H = 841, m = 34;
+    var pg = new Page(doc, D.paper);
+    frame(pg, W, H, 14);
+    topBar(pg, W, m, 26, 22, '주제로 읽는 도쿄  ·  ' + program.title);
+    var sel = pickForTopic(ds, key, 10);
+
+    stamp(pg, m, 58, 112, t.title, t.color, -6);
+    var tx = m + 132, tw = W - m - tx;
+    pg.text(tx, 62, tw, 12, 'THEME  ·  ' + t.en, { pt: 26, color: t.color, ls: 6, bold: true });
+    pg.text(tx, 76, tw, 36, t.title + '의 순간들', { pt: 84, min: 56, bold: true, color: D.ink, lh: 1.15, maxLines: 1 });
+    pg.text(tx, 116, tw, 30, t.desc, { pt: 30, min: 22, font: 'body', color: D.ink, lh: 1.4 });
+    pg.text(tx, 152, tw, 10, 'DAY 01–04  ·  학생 ' + sel.students + '명의 기록 ' + sel.total + '편에서', { pt: 20, color: D.inkSoft, ls: 1 });
+
+    var heroE = sel.picked[0];
+    var y0 = 186;
+    if (heroE) {
+      pg.img(m, y0, 330, 246, featured(heroE), { r: 6, label: t.en });
+      washi(pg, m + 18, y0 - 6, 70, 13, t.color, -5);
+      var qx = m + 348, qw = W - m - qx;
+      pg.text(qx, y0 - 6, 60, 60, '“', { pt: 160, color: t.color, font: 'body', lh: 1 });
+      pg.text(qx, y0 + 42, qw, 150, excerpt(heroE.essay + ' ' + heroE.reflection, t.keywords, 150), { pt: 34, min: 22, font: 'body', color: D.ink, lh: 1.55 });
+      pg.text(qx, y0 + 200, qw, 16, '“' + heroE.oneLine + '”', { pt: 26, min: 18, bold: true, color: t.color, maxLines: 1 });
+      pg.text(qx, y0 + 222, qw, 10, meta(heroE) + '  ·  DAY ' + P.pad2(heroE.day), { pt: 18, color: D.inkSoft, ls: 1 });
+    } else {
+      pg.text(m, y0 + 100, W - m * 2, 20, '이 주제로 분류된 기록이 아직 없습니다.', { pt: 36, color: D.sage, align: 'center' });
+    }
+
+    var gy = 456, gh = 336, cols = 3, rows = 3, gap = 10;
+    var cw = (W - m * 2 - gap * (cols - 1)) / cols, ch = (gh - gap * (rows - 1)) / rows;
+    sel.picked.slice(1, 10).forEach(function (e, i) {
+      var x = m + (i % cols) * (cw + gap), y = gy + Math.floor(i / cols) * (ch + gap);
+      pg.rect(x, y, cw, ch, { fill: D.card, stroke: D.line, sw: 0.3, r: 3.5 });
+      var pw = 76;
+      pg.img(x + 5, y + 5, pw, ch - 10, featured(e), { r: 3, label: 'TEXT' });
+      var bx = x + pw + 11, bw = cw - pw - 17;
+      pg.text(bx, y + 7, bw, 9, '“' + e.oneLine + '”', { pt: 17, min: 12, bold: true, color: t.color, maxLines: 1 });
+      pg.text(bx, y + 19, bw, ch - 35, excerpt(e.essay + ' ' + e.reflection, t.keywords, 110), { pt: 16, min: 11, font: 'body', color: D.ink, lh: 1.5 });
+      pg.text(bx, y + ch - 12, bw, 6, meta(e) + '  ·  DAY ' + P.pad2(e.day), { pt: 12, color: D.inkSoft });
+    });
+    footer(pg, W, H, m, program.schoolName + '  ·  ' + program.subtitle, '주제 포스터  ·  ' + t.title + ' ' + t.en, 15);
+    return finalize(doc);
+  }
+
+  // ============================================================ 3. 학생별 A4 개인 성장 기록지 (학생당 2쪽)
+  function growthRecord(ds, studentIds) {
+    var doc = newDoc('개인성장기록지_A4', 'A4');
+    var students = ds.students.filter(function (s) { return !studentIds || studentIds.indexOf(s.studentId) >= 0; });
+    students.forEach(function (st) {
+      var mine = {};
+      ds.entries.forEach(function (e) { if (e.studentId === st.studentId) mine[e.day] = e; });
+      growthPages(doc, st, mine);
+    });
+    return finalize(doc);
+  }
+
+  function growthPages(doc, st, mine) {
+    var W = 210, H = 297, m = 15;
+    // ---- 1쪽
+    var pg = new Page(doc, D.paper);
+    frame(pg, W, H, 7);
+    topBar(pg, W, m, 12, 10, 'PERSONAL GROWTH RECORD');
+    pg.text(m, 24, 130, 15, st.displayName, { pt: 32, bold: true, color: D.ink, maxLines: 1 });
+    pg.text(m, 39, 150, 6, program.title + '  ·  ' + program.period, { pt: 9.5, color: D.inkSoft });
+    stamp(pg, W - m - 25, 21, 25, '벗', D.accent, -8);
+
+    pg.text(m, 49, 100, 5, '나의 4일, 한 줄 기록', { pt: 9, bold: true, color: D.accent, ls: 1 });
+    var bw = (W - m * 2 - 3 * 3) / 4;
+    program.days.forEach(function (d, i) {
+      var x = m + i * (bw + 3), y = 56;
+      var e = mine[d.day];
+      pg.rect(x, y, bw, 27, { fill: D.card, stroke: D.line, sw: 0.25, r: 2 });
+      pg.rect(x, y, bw, 1.6, { fill: d.color });
+      pg.text(x + 3, y + 3.5, bw - 6, 4.5, P.dayLabel(d.day) + '  ' + d.dateLabel, { pt: 8, bold: true, color: d.color, ls: 0.4 });
+      pg.text(x + 3, y + 9, bw - 6, 16, e ? e.oneLine : '미제출', { pt: 11, min: 8, bold: !!e, color: e ? D.ink : D.sage, lh: 1.3 });
+    });
+    growthSection(pg, m, 89, W - m * 2, 97, 1, mine[1]);
+    growthSection(pg, m, 191, W - m * 2, 97, 2, mine[2]);
+    // ---- 2쪽
+    var pg2 = new Page(doc, D.paper);
+    frame(pg2, W, H, 7);
+    topBar(pg2, W, m, 12, 10, st.displayName + '  ·  PERSONAL GROWTH RECORD');
+    growthSection(pg2, m, 24, W - m * 2, 97, 3, mine[3]);
+    growthSection(pg2, m, 126, W - m * 2, 97, 4, mine[4]);
+    var y = 229;
+    pg2.rect(m, y, W - m * 2, 46, { fill: D.card, stroke: D.line, sw: 0.25, r: 2.5 });
+    pg2.text(m + 5, y + 4, 80, 5, '선생님의 한마디', { pt: 9, bold: true, color: D.accent, ls: 1 });
+    if (st.teacherComment) pg2.text(m + 5, y + 11, W - m * 2 - 40, 32, st.teacherComment, { pt: 10.5, min: 8, font: 'body', color: D.ink, lh: 1.6 });
+    else for (var i = 0; i < 4; i++) pg2.line(m + 5, y + 18 + i * 7, W - m - 38, y + 18 + i * 7, { color: D.line, sw: 0.3, dash: true });
+    stamp(pg2, W - m - 30, y + 12, 24, '인솔', D.accent, -6);
+    footer(pg2, W, H, 8, program.schoolName + '  ·  ' + program.brand, st.displayName, 7.5);
+  }
+
+  function growthSection(pg, x, y, w, h, day, e) {
+    var d = P.getDay(day);
+    pg.rect(x, y, 16, 6, { fill: d.color, r: 1.2 });
+    pg.text(x, y + 0.9, 16, 4.5, P.dayLabel(day), { pt: 8, bold: true, color: '#FFFFFF', align: 'center', valign: 'middle' });
+    pg.text(x + 19, y + 0.4, w - 45, 6, d.theme + '  —  ' + d.themeSub, { pt: 11, bold: true, color: D.ink, maxLines: 1, min: 8 });
+    pg.text(x + w - 30, y + 1, 30, 5, d.dateLabel + ' ' + d.weekday, { pt: 8.5, color: D.inkSoft, align: 'right' });
+    pg.line(x, y + 8.5, x + w, y + 8.5, { color: D.line, sw: 0.3 });
+    var cw = 62;
+    var by = y + 11;
+    if (!e) {
+      pg.placeholder(x, by, cw, 44, { r: 2, label: '미제출' });
+      pg.text(x + cw + 6, by, w - cw - 6, 8, '이 날의 기록이 아직 없습니다.', { pt: 10, color: D.sage });
+      return;
+    }
+    var photos = e.photos;
+    pg.img(x, by, cw, 44, featured(e), { r: 2, label: '사진 비공개' });
+    var others = photos.filter(function (p) { return p !== featured(e); }).slice(0, 2);
+    others.forEach(function (p, i) { pg.img(x + i * (cw / 2 + 0.5), by + 46, cw / 2 - 0.5, 24, p, { r: 1.5 }); });
+    var qy = by + (others.length ? 73 : 48);
+    pg.text(x, qy, cw, h - (qy - y) - 2, '“' + e.oneLine + '”', { pt: 10.5, min: 8, bold: true, color: d.color, lh: 1.3 });
+
+    var rx = x + cw + 6, rw = w - cw - 6;
+    pg.text(rx, by - 0.5, rw, 4.5, 'MISSION  ① ' + d.missions[0], { pt: 7.5, color: D.inkSoft, maxLines: 1, min: 6.5 });
+    pg.text(rx, by + 4, rw, 4.5, 'MISSION  ② ' + d.missions[1], { pt: 7.5, color: D.inkSoft, maxLines: 1, min: 6.5 });
+    pg.text(rx, by + 10, rw, 9, 'Q. ' + d.question, { pt: 8.5, bold: true, color: d.color, lh: 1.35, min: 7 });
+    pg.text(rx, by + 20, rw, 24, e.reflection, { pt: 9.5, min: 7.2, font: 'body', color: D.ink, lh: 1.5 });
+    pg.line(rx, by + 46, rx + rw, by + 46, { color: D.line, sw: 0.25, dash: true });
+    pg.text(rx, by + 48, rw, 4.5, '소감문', { pt: 8, bold: true, color: d.color, ls: 1 });
+    pg.text(rx, by + 53.5, rw, h - (by + 53.5 - y) - 1, e.essay, { pt: 9.5, min: 7, font: 'body', color: D.ink, lh: 1.5 });
+  }
+
+  // ============================================================ 4. 국제교류 결과물 팜플렛 (A5 16쪽, A4 선택 가능)
+  function pamphlet(ds, sizeKey) {
+    sizeKey = sizeKey === 'A4' ? 'A4' : 'A5';
+    var doc = newDoc('국제교류_팜플렛_' + sizeKey, sizeKey);
+    var s = SIZES[sizeKey].w / 148;
+    var W = 148, H = 210, m = 12;
+    var all = ds.entries;
+    function pageNo(pg, n) {
+      pg.text(m, H - 9, W - m * 2, 4, (n < 10 ? '0' : '') + n + '  ·  ' + program.brand, { pt: 6.5, color: D.inkSoft, align: n % 2 ? 'right' : 'left', ls: 0.6 });
+    }
+    // 1. 표지
+    var pg = new Page(doc, D.paper, s);
+    frame(pg, W, H, 6);
+    pg.text(m, 14, W - m * 2, 5, program.brand + '  ·  ' + program.brandFull.toUpperCase(), { pt: 7, color: D.inkSoft, ls: 1.2 });
+    pg.text(m, 24, W - m * 2, 30, '벗과 함께\n도쿄를 기록하다', { pt: 27, bold: true, color: D.ink, lh: 1.25 });
+    pg.text(m, 55, W - m * 2, 10, program.subtitle, { pt: 8.5, color: D.inkSoft, lh: 1.4 });
+    var heroes = program.days.map(function (d) { return dayHero(ds, d.day); });
+    pg.img(m, 70, W - m * 2, 76, heroes[0] && heroes[0].photo, { r: 3 });
+    var sw2 = (W - m * 2 - 6) / 3;
+    [1, 2, 3].forEach(function (i, k) { pg.img(m + k * (sw2 + 3), 149, sw2, 26, heroes[i] && heroes[i].photo, { r: 2 }); });
+    washi(pg, m + 8, 67, 30, 6, D.accent, -5);
+    stamp(pg, W - m - 26, 58, 24, '벗', D.accent, -8);
+    pg.text(m, 182, W - m * 2, 5, program.period, { pt: 8, color: D.ink, bold: true });
+    pg.text(m, 188, W - m * 2, 5, program.schoolName + '  ·  참가 학생 ' + ds.students.length + '명', { pt: 7.5, color: D.inkSoft });
+
+    // 2. 소개
+    pg = new Page(doc, D.paper, s);
+    pg.text(m, 16, W - m * 2, 5, 'ABOUT', { pt: 7.5, bold: true, color: D.accent, ls: 2 });
+    pg.text(m, 22, W - m * 2, 12, 'B.U.T., 벗이 되는 여행', { pt: 17, bold: true, color: D.ink });
+    pg.text(m, 37, W - m * 2, 46,
+      'B.U.T.는 ‘Beyond Universal Togetherness’의 머리글자이자, 우리말 ‘벗’을 닮은 이름입니다. ' +
+      '국경과 언어를 넘어 서로의 일상을 이해하고 함께 기록하는 것 — 그것이 이번 국외현장체험학습의 목표였습니다. ' +
+      '학생들은 4일 동안 매일 미션을 수행하며 사진과 성찰, 한 줄의 기록을 남겼고, 이 책은 그 기록을 모은 것입니다.',
+      { pt: 9, min: 7.5, font: 'body', color: D.ink, lh: 1.7 });
+    var rows = [
+      ['기간', program.period], ['장소', '일본 도쿄 (도쿄타워 · 시부야 · 디즈니랜드 · 자매학교 · 도쿄대학 · 아사쿠사)'],
+      ['참가', '고등학생 ' + ds.students.length + '명'], ['자매학교', '도쿄도립 남평고등학교'], ['숙소', program.hotel]
+    ];
+    rows.forEach(function (r, i) {
+      var y = 90 + i * 11;
+      pg.line(m, y, W - m, y, { color: D.line, sw: 0.25 });
+      pg.text(m, y + 2.5, 22, 6, r[0], { pt: 8, bold: true, color: D.accent });
+      pg.text(m + 22, y + 2.5, W - m * 2 - 22, 8, r[1], { pt: 8, min: 6.5, color: D.ink, lh: 1.3 });
+    });
+    pg.text(m, 151, W - m * 2, 5, '네 가지 주제', { pt: 8, bold: true, color: D.accent, ls: 1 });
+    program.topics.forEach(function (t, i) {
+      var x = m + (i % 2) * ((W - m * 2) / 2), y = 158 + Math.floor(i / 2) * 18;
+      pg.ellipse(x, y, 12, 12, { stroke: t.color, sw: 0.5 });
+      pg.text(x, y + 3.2, 12, 6, t.title, { pt: t.title.length > 1 ? 7 : 10, bold: true, color: t.color, align: 'center' });
+      pg.text(x + 15, y + 0.5, (W - m * 2) / 2 - 17, 12, t.en + '\n' + t.desc, { pt: 6.5, color: D.inkSoft, lh: 1.35 });
+    });
+    pageNo(pg, 2);
+
+    // 3. 일정
+    pg = new Page(doc, D.paper, s);
+    pg.text(m, 16, W - m * 2, 5, 'ITINERARY', { pt: 7.5, bold: true, color: D.accent, ls: 2 });
+    pg.text(m, 22, W - m * 2, 12, '3박 4일의 여정', { pt: 17, bold: true, color: D.ink });
+    var y = 38;
+    program.days.forEach(function (d) {
+      pg.rect(m, y, 15, 5.5, { fill: d.color, r: 1 });
+      pg.text(m, y + 0.8, 15, 4, P.dayLabel(d.day), { pt: 6.5, bold: true, color: '#FFFFFF', align: 'center' });
+      pg.text(m + 18, y + 0.3, W - m * 2 - 18, 5, d.dateLabel + ' (' + d.weekday + ')  ' + d.theme, { pt: 8.5, bold: true, color: D.ink });
+      y += 8;
+      d.schedule.forEach(function (it) {
+        pg.text(m + 3, y, 14, 4, it[0], { pt: 6.8, color: d.color });
+        pg.text(m + 18, y, W - m * 2 - 18, 4, it[1], { pt: 6.8, color: D.ink, maxLines: 1, min: 5.8 });
+        y += 4.1;
+      });
+      y += 4;
+    });
+    pageNo(pg, 3);
+
+    // 4–11. 날짜별 펼침면
+    var n = 4;
+    program.days.forEach(function (d) {
+      var list = byDay(ds, d.day);
+      // (a) 여는 면
+      var p1 = new Page(doc, D.paper, s);
+      p1.text(m, 14, 40, 6, 'DAY', { pt: 11, bold: true, color: d.color, ls: 3 });
+      p1.text(m - 1, 18, 60, 30, P.pad2(d.day), { pt: 64, bold: true, color: d.color, lh: 1.05 });
+      p1.text(m + 46, 24, W - m * 2 - 46, 5, d.dateLabel + ' ' + d.weekdayEn, { pt: 8, color: D.inkSoft, ls: 1 });
+      p1.text(m + 46, 30, W - m * 2 - 46, 16, d.theme, { pt: 15, min: 11, bold: true, color: D.ink, lh: 1.2 });
+      p1.text(m, 50, W - m * 2, 5, d.places.join('  ·  '), { pt: 8, color: d.color });
+      var hero = dayHero(ds, d.day);
+      p1.img(m, 58, W - m * 2, 74, hero && hero.photo, { r: 3 });
+      washi(p1, W - m - 34, 55, 28, 6, d.color, 5);
+      p1.rect(m, 137, W - m * 2, 30, { fill: D.card, stroke: D.line, sw: 0.25, r: 2 });
+      p1.text(m + 4, 140, 40, 4, 'MISSION', { pt: 6.5, bold: true, color: d.color, ls: 1.5 });
+      p1.text(m + 4, 145, W - m * 2 - 8, 10, '① ' + d.missions[0], { pt: 8, min: 7, color: D.ink, lh: 1.3 });
+      p1.text(m + 4, 155, W - m * 2 - 8, 10, '② ' + d.missions[1], { pt: 8, min: 7, color: D.ink, lh: 1.3 });
+      p1.text(m, 171, W - m * 2, 4, '성찰 질문', { pt: 6.5, bold: true, color: d.color, ls: 1 });
+      p1.text(m, 176, W - m * 2, 16, d.question, { pt: 9, min: 7.5, font: 'body', color: D.ink, lh: 1.5 });
+      pageNo(p1, n++);
+      // (b) 목소리 면
+      var p2 = new Page(doc, D.paper, s);
+      p2.text(m, 14, W - m * 2, 5, P.dayLabel(d.day) + '  ·  VOICES', { pt: 7.5, bold: true, color: d.color, ls: 2 });
+      var picks = list.filter(function (e) { return featured(e) && (!hero || featured(e).id !== hero.photo.id); });
+      picks.sort(function (a, b) { return (b.photos.some(function (p) { return p.exhibit; }) ? 1 : 0) - (a.photos.some(function (p) { return p.exhibit; }) ? 1 : 0); });
+      var gw = (W - m * 2 - 4) / 2;
+      picks.slice(0, 4).forEach(function (e, i) {
+        var x = m + (i % 2) * (gw + 4), yy = 22 + Math.floor(i / 2) * 50;
+        p2.img(x, yy, gw, 36, featured(e), { r: 2 });
+        p2.text(x, yy + 37.5, gw, 9, e.oneLine, { pt: 8, min: 6.5, bold: true, color: D.ink, lh: 1.3, maxLines: 2 });
+        p2.text(x, yy + 45.5, gw, 3.5, e.displayName, { pt: 5.8, color: D.inkSoft });
+      });
+      var quotes = list.slice().sort(function (a, b) { return Array.from(b.essay).length - Array.from(a.essay).length; }).slice(0, 2);
+      quotes.forEach(function (e, i) {
+        var yy = 126 + i * 36;
+        p2.text(m, yy - 2, 8, 10, '“', { pt: 26, color: d.color, font: 'body', lh: 1 });
+        p2.text(m + 8, yy, W - m * 2 - 8, 24, excerpt(e.essay, null, 110), { pt: 8.5, min: 7, font: 'body', color: D.ink, lh: 1.6 });
+        p2.text(m + 8, yy + 25, W - m * 2 - 8, 4, '— ' + e.displayName, { pt: 6.5, color: D.inkSoft });
+      });
+      if (!list.length) p2.text(m, 90, W - m * 2, 10, '아직 제출된 기록이 없습니다.', { pt: 10, color: D.sage, align: 'center' });
+      pageNo(p2, n++);
+    });
+
+    // 12. 우리들의 한 줄
+    pg = new Page(doc, D.paper, s);
+    pg.text(m, 16, W - m * 2, 5, 'ONE LINE', { pt: 7.5, bold: true, color: D.accent, ls: 2 });
+    pg.text(m, 22, W - m * 2, 12, '우리들의 한 줄', { pt: 17, bold: true, color: D.ink });
+    var best = ds.students.map(function (st) {
+      var es = all.filter(function (e) { return e.studentId === st.studentId; });
+      es.sort(function (a, b) { return (b.reviewStatus === 'approved') - (a.reviewStatus === 'approved') || b.day - a.day; });
+      return es[0];
+    }).filter(Boolean);
+    var colW = (W - m * 2 - 6) / 2, per = Math.ceil(best.length / 2);
+    var lineH = Math.min(15.5, 150 / Math.max(per, 1));
+    best.forEach(function (e, i) {
+      var x = m + Math.floor(i / per) * (colW + 6), yy = 38 + (i % per) * lineH;
+      pg.text(x, yy, colW, 3.5, e.displayName + '  ·  ' + P.dayLabel(e.day), { pt: 5.8, color: P.getDay(e.day).color, ls: 0.4 });
+      pg.text(x, yy + 3.8, colW, lineH - 5, e.oneLine, { pt: 8.2, min: 6.5, bold: true, color: D.ink, lh: 1.25, maxLines: 2 });
+    });
+    pageNo(pg, n++);
+
+    // 13. 주제로 읽는 도쿄
+    pg = new Page(doc, D.paper, s);
+    pg.text(m, 16, W - m * 2, 5, 'THEMES', { pt: 7.5, bold: true, color: D.accent, ls: 2 });
+    pg.text(m, 22, W - m * 2, 12, '주제로 읽는 도쿄', { pt: 17, bold: true, color: D.ink });
+    program.topics.forEach(function (t, i) {
+      var yy = 40 + i * 40;
+      var sel = pickForTopic(ds, t.key, 1);
+      pg.ellipse(m, yy, 16, 16, { stroke: t.color, sw: 0.6 });
+      pg.text(m, yy + 4.6, 16, 7, t.title, { pt: t.title.length > 1 ? 8.5 : 12, bold: true, color: t.color, align: 'center' });
+      pg.text(m + 20, yy, W - m * 2 - 20, 5, t.en + '  ·  기록 ' + sel.total + '편', { pt: 6.8, bold: true, color: t.color, ls: 1 });
+      pg.text(m + 20, yy + 5.5, W - m * 2 - 20, 7, t.desc, { pt: 7.5, color: D.inkSoft, maxLines: 1, min: 6.2 });
+      if (sel.picked[0]) {
+        pg.text(m + 20, yy + 13, W - m * 2 - 20, 17, '“' + excerpt(sel.picked[0].essay, t.keywords, 90) + '”', { pt: 8, min: 6.8, font: 'body', color: D.ink, lh: 1.55 });
+        pg.text(m + 20, yy + 31, W - m * 2 - 20, 4, '— ' + sel.picked[0].displayName + ', ' + P.dayLabel(sel.picked[0].day), { pt: 6, color: D.inkSoft });
+      }
+    });
+    pageNo(pg, n++);
+
+    // 14. 사진 모자이크
+    pg = new Page(doc, D.paper, s);
+    pg.text(m, 16, W - m * 2, 5, 'MOMENTS', { pt: 7.5, bold: true, color: D.accent, ls: 2 });
+    pg.text(m, 22, W - m * 2, 12, '함께한 순간들', { pt: 17, bold: true, color: D.ink });
+    var pool = [];
+    all.forEach(function (e) { e.photos.forEach(function (p) { if (p.exhibit) pool.push(p); }); });
+    all.forEach(function (e) { var f = featured(e); if (f && pool.indexOf(f) < 0) pool.push(f); });
+    var mc = 4, mr = 6, mg = 2, mw = (W - m * 2 - mg * (mc - 1)) / mc, mh = (H - 40 - 16 - mg * (mr - 1)) / mr;
+    pool.slice(0, mc * mr).forEach(function (p, i) { pg.img(m + (i % mc) * (mw + mg), 38 + Math.floor(i / mc) * (mh + mg), mw, mh, p, { r: 1.2 }); });
+    pageNo(pg, n++);
+
+    // 15. 마치며
+    pg = new Page(doc, D.paper, s);
+    pg.text(m, 16, W - m * 2, 5, 'CLOSING', { pt: 7.5, bold: true, color: D.accent, ls: 2 });
+    pg.text(m, 22, W - m * 2, 12, '여행이 끝나도, 벗은 남는다', { pt: 16, bold: true, color: D.ink });
+    pg.text(m, 38, W - m * 2, 40,
+      '낯선 도시의 풍경에서 시작해, 대중교통의 작은 배려와 자매학교 친구의 웃음, 오래된 사찰과 대학 캠퍼스에서 마주한 미래까지. ' +
+      '네 번의 하루가 모여 우리는 조금 더 넓은 세상을 품게 되었습니다. 함께 기록해 준 모든 벗에게 고마움을 전합니다.',
+      { pt: 9, min: 7.5, font: 'body', color: D.ink, lh: 1.7 });
+    pg.text(m, 86, W - m * 2, 5, '함께한 벗들', { pt: 8, bold: true, color: D.accent, ls: 1 });
+    var names = ds.students.map(function (st) { return st.displayName; });
+    var nc = 3, nw = (W - m * 2) / nc;
+    names.forEach(function (nm, i) { pg.text(m + (i % nc) * nw, 93 + Math.floor(i / nc) * 6, nw - 2, 5, nm, { pt: 7.5, color: D.ink, maxLines: 1, min: 6 }); });
+    stamp(pg, W - m - 28, H - 52, 26, '벗', D.accent, -8);
+    pg.text(m, H - 30, W - m * 2, 5, program.schoolName + '  ·  ' + program.subtitle, { pt: 7, color: D.inkSoft });
+    pageNo(pg, n++);
+
+    // 16. 뒤표지
+    pg = new Page(doc, D.ink, s);
+    pg.text(m, H / 2 - 22, W - m * 2, 10, program.brand, { pt: 16, bold: true, color: D.paper, align: 'center', ls: 2 });
+    pg.text(m, H / 2 - 10, W - m * 2, 6, program.brandFull.toUpperCase(), { pt: 7, color: D.sage, align: 'center', ls: 1.5 });
+    pg.line(W / 2 - 10, H / 2, W / 2 + 10, H / 2, { color: D.accent, sw: 0.6 });
+    pg.text(m, H / 2 + 5, W - m * 2, 6, program.title, { pt: 9, color: D.paper, align: 'center' });
+    pg.text(m, H - 24, W - m * 2, 5, program.schoolName + '  ·  ' + program.period, { pt: 6.5, color: D.sage, align: 'center' });
+    return finalize(doc);
+  }
+
+  // ============================================================ 5. 기록 카드 (A5, 제출 1건 = 1쪽 — Canva 대량 제작 예시와 같은 디자인)
+  function recordCards(ds, day) {
+    var doc = newDoc('기록카드_A5' + (day ? '_DAY' + P.pad2(day) : ''), 'A5');
+    ds.entries.filter(function (e) { return !day || e.day === day; }).forEach(function (e) {
+      var pg = new Page(doc, '#E9E4DA');
+      recordCard(pg, 10, 10, 128, 134.5, e, { showDay: true });
+      pg.text(14, 150, 120, 4, '오늘의 기록', { pt: 7, bold: true, color: P.getDay(e.day).color, ls: 1 });
+      pg.text(14, 155, 120, 45, excerpt(e.essay, null, 200), { pt: 8.5, min: 7, font: 'body', color: D.ink, lh: 1.6 });
+    });
+    return finalize(doc);
+  }
+
+  // ============================================================ 6. 접속 안내 (QR) + PIN 배부 카드
+  function accessGuide(url, students) {
+    var doc = newDoc('접속안내_QR_A4', 'A4');
+    var W = 210, H = 297, m = 18;
+    var pg = new Page(doc, D.paper);
+    frame(pg, W, H, 8);
+    topBar(pg, W, m, 16, 11, 'STUDENT GUIDE');
+    pg.text(m, 34, W - m * 2, 30, '벗과 함께\n도쿄를 기록하다', { pt: 30, bold: true, color: D.ink, lh: 1.2 });
+    pg.text(m, 68, W - m * 2, 8, 'QR을 찍고, 매일 저녁 오늘의 기록을 남겨 주세요.', { pt: 12, color: D.inkSoft });
+    pg.rect(W / 2 - 45, 84, 90, 90, { fill: '#FFFFFF', r: 3, stroke: D.line, sw: 0.3 });
+    pg.qr(W / 2 - 40, 89, 80, url);
+    washi(pg, W / 2 - 18, 80, 36, 7, D.accent, -4);
+    pg.text(m, 178, W - m * 2, 6, url, { pt: 7.5, color: D.inkSoft, align: 'center' });
+    var steps = [
+      ['1', '학생 번호와 PIN(4자리)으로 로그인'],
+      ['2', '오늘 날짜(DAY)의 미션과 성찰 질문 확인'],
+      ['3', '사진 1~3장, 성찰 답변, 소감문, 한 줄 기록 작성'],
+      ['4', '제출 완료 화면 확인 — 다시 제출하면 최신 내용으로 바뀝니다']
+    ];
+    steps.forEach(function (st, i) {
+      var y = 192 + i * 15;
+      pg.ellipse(m, y, 10, 10, { fill: D.accent });
+      pg.text(m, y + 2.3, 10, 5, st[0], { pt: 11, bold: true, color: '#FFFFFF', align: 'center' });
+      pg.text(m + 14, y + 1.8, W - m * 2 - 14, 7, st[1], { pt: 11.5, color: D.ink });
+    });
+    pg.text(m, 258, W - m * 2, 14, '※ 사진과 글은 인솔 교사만 볼 수 있으며, 전시물에는 실명 대신 학생 표시 이름이 사용됩니다. 얼굴이 크게 나온 친구 사진은 동의를 받고 올려 주세요.', { pt: 8.5, color: D.inkSoft, lh: 1.5 });
+
+    if (students && students.length) {
+      var cols = 2, rows = 5, cw = (W - 20 - 6) / cols, ch = (H - 20 - 4 * 4) / rows;
+      students.forEach(function (st, i) {
+        if (i % (cols * rows) === 0) pg = new Page(doc, '#FFFFFF');
+        var k = i % (cols * rows);
+        var x = 10 + (k % cols) * (cw + 6), y = 10 + Math.floor(k / cols) * (ch + 4);
+        pg.rect(x, y, cw, ch, { fill: D.paper, stroke: D.line, sw: 0.3, dash: true, r: 2 });
+        pg.text(x + 6, y + 5, cw - 40, 5, program.brand, { pt: 7.5, bold: true, color: D.ink, ls: 0.8 });
+        pg.text(x + 6, y + 12, cw - 40, 9, st.displayName, { pt: 16, bold: true, color: D.accent, maxLines: 1, min: 10 });
+        pg.text(x + 6, y + 24, cw - 40, 6, '학생 번호   ' + st.studentId, { pt: 11, color: D.ink });
+        pg.text(x + 6, y + 31, cw - 40, 6, 'PIN   ' + st.pin, { pt: 11, color: D.ink, bold: true });
+        pg.text(x + 6, y + 40, cw - 40, 8, 'PIN은 다른 사람에게 알려주지 마세요.', { pt: 7, color: D.inkSoft });
+        pg.qr(x + cw - 32, y + 8, 26, url);
+      });
+    }
+    return finalize(doc);
+  }
+
+  // ------------------------------------------------------------ 결과물 목록
+  var OUTPUTS = [
+    { key: 'day1', label: 'DAY 01 A1 포스터', build: function (ds) { return dayPoster(ds, 1); } },
+    { key: 'day2', label: 'DAY 02 A1 포스터', build: function (ds) { return dayPoster(ds, 2); } },
+    { key: 'day3', label: 'DAY 03 A1 포스터', build: function (ds) { return dayPoster(ds, 3); } },
+    { key: 'day4', label: 'DAY 04 A1 포스터', build: function (ds) { return dayPoster(ds, 4); } }
+  ].concat(program.topics.map(function (t) {
+    return { key: 'topic-' + t.key, label: '주제 A1 포스터 · ' + t.title, build: function (ds) { return topicPoster(ds, t.key); } };
+  })).concat([
+    { key: 'growth', label: '학생별 A4 개인 성장 기록지 (전체)', build: function (ds, o) { return growthRecord(ds, o && o.studentIds); } },
+    { key: 'pamphlet-a5', label: '국제교류 팜플렛 A5 (16쪽)', build: function (ds) { return pamphlet(ds, 'A5'); } },
+    { key: 'pamphlet-a4', label: '국제교류 팜플렛 A4 (16쪽)', build: function (ds) { return pamphlet(ds, 'A4'); } },
+    { key: 'cards', label: '기록 카드 A5 (제출 1건 = 1쪽)', build: function (ds) { return recordCards(ds); } }
+  ]);
+
+  function build(key, ds, opts) {
+    for (var i = 0; i < OUTPUTS.length; i++) if (OUTPUTS[i].key === key) return OUTPUTS[i].build(ds, opts || {});
+    throw new Error('unknown output ' + key);
+  }
+  function photoIdsOf(doc) {
+    var ids = {};
+    doc.pages.forEach(function (p) { p.els.forEach(function (e) { if (e.t === 'img') ids[e.src] = 1; }); });
+    return Object.keys(ids);
+  }
+
+  return {
+    SIZES: SIZES, OUTPUTS: OUTPUTS, build: build, photoIdsOf: photoIdsOf,
+    dayPoster: dayPoster, topicPoster: topicPoster, growthRecord: growthRecord, pamphlet: pamphlet,
+    recordCards: recordCards, accessGuide: accessGuide,
+    _wrap: wrap, _fit: fit, _textWidth: textWidth, excerpt: excerpt
+  };
+})();
+
+if (typeof module !== 'undefined' && module.exports) module.exports = BUT_Layout;
+
+</script>
+<script>
+/*
+ * 문서 모델 → HTML (미리보기 · 브라우저 인쇄 · Playwright PDF)
+ * resolve(photoId) → 이미지 src(data URL 또는 URL) | null
+ */
+var BUT_RenderHTML = (function () {
+  var P = typeof BUT_Program !== 'undefined' ? BUT_Program : require('./program.js');
+  var QR = typeof qrcode !== 'undefined' ? qrcode : (typeof require !== 'undefined' ? require('qrcode-generator') : null);
+  var F = P.program.design.fonts;
+  var FONT = {
+    title: "'" + F.title + "', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
+    body: "'" + F.body + "', 'AppleMyungjo', 'Batang', serif"
+  };
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function n(v) { return Math.round(v * 1000) / 1000; }
+  function box(e) { return 'left:' + n(e.x) + 'mm;top:' + n(e.y) + 'mm;width:' + n(e.w) + 'mm;height:' + n(e.h) + 'mm;'; }
+  function rot(e) { return e.rot ? 'transform:rotate(' + e.rot + 'deg);' : ''; }
+
+  function qrSvg(data) {
+    if (!QR) return '';
+    var q = QR(0, 'M');
+    q.addData(String(data));
+    q.make();
+    return q.createSvgTag({ cellSize: 4, margin: 0, scalable: true });
+  }
+
+  function el(e, resolve) {
+    switch (e.t) {
+      case 'rect':
+      case 'ellipse':
+        return '<div class="e" style="' + box(e) + rot(e) +
+          (e.fill ? 'background:' + e.fill + ';' : '') +
+          (e.stroke && e.sw ? 'border:' + n(e.sw) + 'mm solid ' + e.stroke + ';' : '') +
+          'border-radius:' + (e.t === 'ellipse' ? '50%' : n(e.r) + 'mm') + ';' +
+          (e.op < 1 ? 'opacity:' + e.op + ';' : '') + '"></div>';
+      case 'line': {
+        // 높이 0인 SVG는 그려지지 않으므로 선 굵기만큼 여백을 둔 상자에 그린다
+        var pad = Math.max(e.sw, 0.2);
+        var x = Math.min(e.x1, e.x2) - pad, y = Math.min(e.y1, e.y2) - pad;
+        var w = Math.abs(e.x2 - e.x1) + pad * 2, h = Math.abs(e.y2 - e.y1) + pad * 2;
+        return '<svg class="e" style="left:' + n(x) + 'mm;top:' + n(y) + 'mm;width:' + n(w) + 'mm;height:' + n(h) + 'mm;overflow:visible" viewBox="0 0 ' + n(w) + ' ' + n(h) + '" preserveAspectRatio="none">' +
+          '<line x1="' + n(e.x1 - x) + '" y1="' + n(e.y1 - y) + '" x2="' + n(e.x2 - x) + '" y2="' + n(e.y2 - y) + '" stroke="' + e.color + '" stroke-width="' + n(e.sw) + '"' +
+          (e.dash ? ' stroke-dasharray="' + n(e.sw * 4) + ' ' + n(e.sw * 3) + '"' : '') + ' vector-effect="none"/></svg>';
+      }
+      case 'text': {
+        var jc = e.valign === 'middle' ? 'center' : e.valign === 'bottom' ? 'flex-end' : 'flex-start';
+        return '<div class="e t" style="' + box(e) + rot(e) + 'justify-content:' + jc + ';text-align:' + e.align + ';' +
+          'font-family:' + FONT[e.font === 'body' ? 'body' : 'title'] + ';font-size:' + e.pt + 'pt;line-height:' + e.lh + ';' +
+          'color:' + e.color + ';' + (e.bold ? 'font-weight:700;' : '') + (e.ls ? 'letter-spacing:' + n(e.ls) + 'pt;' : '') +
+          '"><span>' + esc(e.text) + '</span></div>';
+      }
+      case 'img': {
+        var src = resolve ? resolve(e.src) : null;
+        return '<div class="e" style="' + box(e) + 'border-radius:' + n(e.r) + 'mm;overflow:hidden;background:' + P.program.design.paperDeep + ';">' +
+          (src ? '<img src="' + esc(src) + '" alt="">' : '') + '</div>';
+      }
+      case 'qr':
+        return '<div class="e qr" style="' + box(e) + '">' + qrSvg(e.data) + '</div>';
+    }
+    return '';
+  }
+
+  function pageHTML(doc, page, resolve) {
+    return '<section class="but-page" style="width:' + doc.size.w + 'mm;height:' + doc.size.h + 'mm;background:' + page.bg + ';">' +
+      page.els.map(function (e) { return el(e, resolve); }).join('') + '</section>';
+  }
+
+  function css(doc) {
+    return [
+      '@page{size:' + doc.size.w + 'mm ' + doc.size.h + 'mm;margin:0}',
+      '.but-page{position:relative;overflow:hidden;box-sizing:border-box;break-after:page;page-break-after:always;-webkit-print-color-adjust:exact;print-color-adjust:exact}',
+      '.but-page:last-child{break-after:auto;page-break-after:auto}',
+      '.but-page .e{position:absolute;box-sizing:border-box;margin:0}',
+      '.but-page .t{display:flex;flex-direction:column;white-space:pre;overflow:visible;word-break:keep-all}',
+      '.but-page img{width:100%;height:100%;object-fit:cover;display:block}',
+      '.but-page .qr svg{width:100%;height:100%;display:block}'
+    ].join('\n');
+  }
+
+  function pagesHTML(doc, resolve) {
+    return doc.pages.map(function (p) { return pageHTML(doc, p, resolve); }).join('\n');
+  }
+
+  // 단독 HTML 문서 (편집 가능한 원본 · 인쇄용)
+  function documentHTML(doc, resolve, fontCss) {
+    return '<!doctype html><html lang="ko"><head><meta charset="utf-8"><title>' + esc(doc.name) + '</title>' +
+      (fontCss || '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&display=swap">') +
+      '<style>html,body{margin:0;padding:0;background:#fff}' + css(doc) + '</style></head><body>' + pagesHTML(doc, resolve) + '</body></html>';
+  }
+
+  return { css: css, pagesHTML: pagesHTML, pageHTML: pageHTML, documentHTML: documentHTML, qrSvg: qrSvg };
+})();
+
+if (typeof module !== 'undefined' && module.exports) module.exports = BUT_RenderHTML;
+
+</script>
+<script>
+/*
+ * 문서 모델 → PPTX (편집 가능한 원본: PowerPoint · Keynote · Google Slides · Canva 가져오기)
+ * resolve(photoId) → 'data:image/jpeg;base64,...' | null
+ * PptxGenJS: 브라우저는 전역 PptxGenJS, Node는 require('pptxgenjs')
+ */
+var BUT_RenderPPTX = (function () {
+  var P = typeof BUT_Program !== 'undefined' ? BUT_Program : require('./program.js');
+  var QR = typeof qrcode !== 'undefined' ? qrcode : (typeof require !== 'undefined' ? require('qrcode-generator') : null);
+  var F = P.program.design.fonts;
+  var IN = 1 / 25.4;
+  function c(hex) { return String(hex || '#000000').replace('#', '').toUpperCase(); }
+  function i(mm) { return Math.round(mm * IN * 10000) / 10000; }
+  function pt(mm) { return Math.round((mm / 0.3528) * 100) / 100; }
+
+  function qrRects(slide, pptx, e) {
+    if (!QR) return;
+    var q = QR(0, 'M');
+    q.addData(String(e.data));
+    q.make();
+    var count = q.getModuleCount();
+    var cell = e.w / count;
+    for (var r = 0; r < count; r++) {
+      var run = -1;
+      for (var col = 0; col <= count; col++) {
+        var dark = col < count && q.isDark(r, col);
+        if (dark && run < 0) run = col;
+        if (!dark && run >= 0) {
+          slide.addShape(pptx.ShapeType.rect, { x: i(e.x + run * cell), y: i(e.y + r * cell), w: i((col - run) * cell), h: i(cell), fill: { color: '000000' }, line: { type: 'none' } });
+          run = -1;
+        }
+      }
+    }
+  }
+
+  function render(doc, resolve, PptxGenJS) {
+    var Ctor = PptxGenJS || (typeof window !== 'undefined' && window.PptxGenJS) || require('pptxgenjs');
+    var pptx = new Ctor();
+    var layoutName = 'BUT_' + doc.sizeKey;
+    pptx.defineLayout({ name: layoutName, width: i(doc.size.w), height: i(doc.size.h) });
+    pptx.layout = layoutName;
+    pptx.title = doc.name;
+    pptx.company = P.program.schoolName;
+    pptx.subject = P.program.brand;
+
+    doc.pages.forEach(function (page) {
+      var slide = pptx.addSlide();
+      slide.background = { color: c(page.bg) };
+      page.els.forEach(function (e) {
+        switch (e.t) {
+          case 'rect':
+          case 'ellipse': {
+            var o = { x: i(e.x), y: i(e.y), w: i(e.w), h: i(e.h), rotate: e.rot || 0 };
+            if (e.fill) o.fill = { color: c(e.fill), transparency: Math.round((1 - (e.op === undefined ? 1 : e.op)) * 100) };
+            o.line = e.stroke && e.sw ? { color: c(e.stroke), width: pt(e.sw) } : { type: 'none' };
+            var shape = e.t === 'ellipse' ? pptx.ShapeType.ellipse : e.r ? pptx.ShapeType.roundRect : pptx.ShapeType.rect;
+            if (e.t === 'rect' && e.r) o.rectRadius = i(e.r);
+            slide.addShape(shape, o);
+            break;
+          }
+          case 'line': {
+            slide.addShape(pptx.ShapeType.line, {
+              x: i(Math.min(e.x1, e.x2)), y: i(Math.min(e.y1, e.y2)),
+              w: i(Math.abs(e.x2 - e.x1)), h: i(Math.abs(e.y2 - e.y1)),
+              line: { color: c(e.color), width: pt(e.sw), dashType: e.dash ? 'dash' : 'solid' }
+            });
+            break;
+          }
+          case 'text': {
+            slide.addText(e.text, {
+              x: i(e.x), y: i(e.y), w: i(e.w), h: i(e.h), margin: 0,
+              fontFace: e.font === 'body' ? F.body : F.title, fontSize: e.pt, bold: !!e.bold,
+              color: c(e.color), align: e.align, valign: e.valign === 'middle' ? 'middle' : e.valign === 'bottom' ? 'bottom' : 'top',
+              lineSpacing: Math.round(e.pt * e.lh * 100) / 100, charSpacing: e.ls || 0, rotate: e.rot || 0,
+              fit: 'none', wrap: true, lang: 'ko-KR'
+            });
+            break;
+          }
+          case 'img': {
+            var src = resolve ? resolve(e.src) : null;
+            if (!src) {
+              slide.addShape(pptx.ShapeType.rect, { x: i(e.x), y: i(e.y), w: i(e.w), h: i(e.h), fill: { color: c(P.program.design.paperDeep) }, line: { type: 'none' } });
+              break;
+            }
+            var data = src.replace(/^data:/, '');
+            slide.addImage({
+              data: data, x: i(e.x), y: i(e.y), w: i(e.w), h: i((e.w * e.ih) / e.iw),
+              sizing: { type: 'cover', w: i(e.w), h: i(e.h) }
+            });
+            break;
+          }
+          case 'qr':
+            qrRects(slide, pptx, e);
+            break;
+        }
+      });
+    });
+    return pptx;
+  }
+
+  return { render: render };
+})();
+
+if (typeof module !== 'undefined' && module.exports) module.exports = BUT_RenderPPTX;
+
+</script>
+<script>
+/*
+ * 서버 호출 어댑터: Apps Script에서는 google.script.run, 로컬 서버에서는 fetch('/api')
+ * 네트워크 오류는 자동 재시도, 서버가 돌려준 오류(검증 실패 등)는 그대로 전달
+ */
+var BUT_API = (function () {
+  var isGAS = typeof google !== 'undefined' && google.script && google.script.run;
+
+  function once(action, payload) {
+    return new Promise(function (resolve, reject) {
+      if (isGAS) {
+        google.script.run
+          .withSuccessHandler(resolve)
+          .withFailureHandler(function (err) { reject({ network: true, message: String(err && err.message || err) }); })
+          .api(action, payload);
+      } else {
+        fetch('api', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: action, payload: payload }) })
+          .then(function (r) { if (!r.ok && r.status >= 500) throw new Error('HTTP ' + r.status); return r.json(); })
+          .then(resolve)
+          .catch(function (e) { reject({ network: true, message: String(e && e.message || e) }); });
+      }
+    });
+  }
+
+  function call(action, payload, opts) {
+    opts = opts || {};
+    var tries = opts.retries === undefined ? 2 : opts.retries;
+    function attempt(n) {
+      return once(action, payload).then(function (res) {
+        if (res && res.ok) return res.data;
+        var err = (res && res.error) || { code: 'SERVER', message: '알 수 없는 오류' };
+        throw err;
+      }, function (netErr) {
+        if (n < tries) return new Promise(function (r) { setTimeout(r, 1200 * Math.pow(2, n)); }).then(function () { return attempt(n + 1); });
+        throw { code: 'NETWORK', message: '인터넷 연결이 불안정합니다. 와이파이/데이터를 확인하고 다시 시도해 주세요.', detail: netErr.message };
+      });
+    }
+    return attempt(0);
+  }
+
+  function uuid() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = (Math.random() * 16) | 0;
+      return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+    });
+  }
+
+  var store = {
+    get: function (k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } },
+    set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* 저장 불가(사생활 보호 모드) */ } },
+    del: function (k) { try { localStorage.removeItem(k); } catch (e) { /* 무시 */ } }
+  };
+
+  function toast(msg, ms) {
+    var t = document.createElement('div');
+    t.className = 'toast';
+    t.setAttribute('role', 'status');
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function () { t.remove(); }, ms || 2600);
+  }
+
+  function esc(s) {
+    return String(s === undefined || s === null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function fmtTime(isoStr) {
+    if (!isoStr) return '';
+    var d = new Date(isoStr);
+    var p = function (n) { return (n < 10 ? '0' : '') + n; };
+    return (d.getMonth() + 1) + '/' + d.getDate() + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+  }
+
+  return { call: call, uuid: uuid, store: store, toast: toast, esc: esc, fmtTime: fmtTime, isGAS: !!isGAS };
+})();
+
+</script>
+<script>
+/* B.U.T. TOKYO 2026 — 교사용 관리자 페이지 */
+(function () {
+  'use strict';
+  var PROG = BUT_Program.program;
+  var L = BUT_Layout, RH = BUT_RenderHTML, RP = BUT_RenderPPTX;
+  var esc = BUT_API.esc, toast = BUT_API.toast, store = BUT_API.store, pad2 = BUT_Program.pad2;
+  var $view = document.getElementById('view');
+  var A = { token: null, tab: 'overview', overview: null, subs: null, filters: { day: '', studentId: '', status: '' }, photos: {}, settings: null, students: null };
+  try { A.token = sessionStorage.getItem('but.admin'); } catch (e) { /* 무시 */ }
+
+  function api(action, payload, opts) {
+    payload = payload || {};
+    payload.token = A.token;
+    return BUT_API.call(action, payload, opts).catch(function (e) {
+      if (e && e.code === 'AUTH' && action !== 'adminLogin') { logout(); toast(e.message); }
+      throw e;
+    });
+  }
+  function fail(e) { toast((e && e.message) || '오류가 발생했습니다.', 4000); }
+  function dayColor(d) { return BUT_Program.getDay(d).color; }
+
+  // ------------------------------------------------------------ 로그인
+  function renderLogin(msg) {
+    document.getElementById('tabs').classList.add('hidden');
+    $view.innerHTML = '<section class="card login"><span class="label">ADMIN</span><h2 style="margin:4px 0 16px">관리자 로그인</h2>' +
+      '<form id="lf"><label class="field"><span class="field-label">관리자 비밀번호</span><input class="input" type="password" id="pw" autocomplete="current-password" required></label>' +
+      '<div class="err" id="le">' + esc(msg || '') + '</div><button class="btn block" id="lb">로그인</button></form>' +
+      '<p class="muted" style="font-size:12px;margin-top:14px">비밀번호는 Apps Script 편집기에서 setup() 또는 resetAdminPassword() 실행 로그에서 확인합니다.</p></section>';
+    document.getElementById('lf').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      BUT_API.call('adminLogin', { password: document.getElementById('pw').value }).then(function (r) {
+        A.token = r.token;
+        try { sessionStorage.setItem('but.admin', r.token); } catch (e) { /* 무시 */ }
+        start();
+      }).catch(function (e) { document.getElementById('le').textContent = e.message; });
+    });
+  }
+  function logout() {
+    A.token = null;
+    try { sessionStorage.removeItem('but.admin'); } catch (e) { /* 무시 */ }
+    renderLogin();
+  }
+
+  function start() {
+    document.getElementById('tabs').classList.remove('hidden');
+    show(A.tab);
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#tabs [data-tab]'), function (b) {
+    b.addEventListener('click', function () { show(b.dataset.tab); });
+  });
+  document.getElementById('logoutBtn').addEventListener('click', logout);
+
+  function show(tab) {
+    A.tab = tab;
+    Array.prototype.forEach.call(document.querySelectorAll('#tabs [data-tab]'), function (b) { b.setAttribute('aria-selected', String(b.dataset.tab === tab)); });
+    $view.innerHTML = '<p class="muted">불러오는 중…</p>';
+    ({ overview: viewOverview, review: viewReview, students: viewStudents, outputs: viewOutputs, settings: viewSettings })[tab]();
+  }
+
+  // ------------------------------------------------------------ 사진 캐시
+  function loadPhotos(ids, kind) {
+    var need = ids.filter(function (id) { return id && !A.photos[id]; });
+    var chunks = [];
+    for (var i = 0; i < need.length; i += 8) chunks.push(need.slice(i, i + 8));
+    return chunks.reduce(function (p, chunk) {
+      return p.then(function () {
+        return api('adminPhotos', { photoIds: chunk, kind: kind || 'display' }, { retries: 3 }).then(function (r) {
+          Object.keys(r.photos).forEach(function (k) { A.photos[k] = r.photos[k]; });
+        });
+      });
+    }, Promise.resolve());
+  }
+  function scaled(id, maxPx) {
+    var key = id + '@' + maxPx;
+    if (A.photos[key]) return Promise.resolve(A.photos[key]);
+    var src = A.photos[id];
+    if (!src) return Promise.resolve(null);
+    return new Promise(function (res) {
+      var img = new Image();
+      img.onload = function () {
+        var k = Math.min(1, maxPx / Math.max(img.width, img.height));
+        if (k >= 1) { A.photos[key] = src; return res(src); }
+        var cv = document.createElement('canvas');
+        cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k);
+        cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+        A.photos[key] = cv.toDataURL('image/jpeg', 0.85);
+        res(A.photos[key]);
+      };
+      img.onerror = function () { res(null); };
+      img.src = src;
+    });
+  }
+
+  // ============================================================ 제출 현황
+  function viewOverview() {
+    api('adminOverview').then(function (o) {
+      A.overview = o;
+      var total = o.totalStudents;
+      var h = '<div class="grid-stats">';
+      o.perDay.forEach(function (d) {
+        var info = BUT_Program.getDay(d.day);
+        var pct = total ? Math.round((d.submitted / total) * 100) : 0;
+        h += '<div class="card stat"><span class="label" style="color:' + info.color + '">DAY ' + pad2(d.day) + ' · ' + info.dateLabel + '</span>' +
+          '<b>' + d.submitted + '<span class="muted" style="font-size:16px"> / ' + total + '</span></b>' +
+          '<span class="badge ' + (d.state === 'open' ? 'ok' : 'no') + '">' + ({ open: '제출 가능', locked: '마감', notyet: '열리기 전' })[d.state] + '</span>' +
+          '<div class="bar"><i style="width:' + pct + '%;background:' + info.color + '"></i></div></div>';
+      });
+      h += '</div>';
+      h += '<section class="card panel"><h2>학생별 · 날짜별 제출 현황 <button class="btn ghost small" id="refresh">새로고침</button> <span class="muted" style="font-size:13px;font-weight:400">칸을 누르면 검토 화면으로 이동합니다 · 1분마다 자동 갱신</span></h2>' +
+        '<div class="table-wrap"><table><thead><tr><th>번호</th><th>표시 이름</th>' +
+        PROG.days.map(function (d) { return '<th style="color:' + d.color + '">DAY ' + pad2(d.day) + '</th>'; }).join('') + '<th>합계</th></tr></thead><tbody>';
+      o.students.forEach(function (s) {
+        var cnt = 0;
+        h += '<tr' + (s.active ? '' : ' style="opacity:.45"') + '><td class="mono">' + esc(s.studentId) + '</td><td>' + esc(s.displayName) + (s.name ? ' <span class="muted" style="font-size:12px">' + esc(s.name) + '</span>' : '') + (s.exhibitConsent === false ? ' <span class="badge warn">사진 비공개</span>' : '') + '</td>';
+        PROG.days.forEach(function (d) {
+          var c = o.cells[s.studentId] && o.cells[s.studentId][d.day];
+          if (c) cnt++;
+          h += '<td>' + (c ? '<button class="cell" data-go="' + d.day + '|' + esc(s.studentId) + '"><span class="badge ' + (c.reviewStatus === 'approved' ? 'ok' : c.reviewStatus === 'hold' ? 'accent' : 'warn') + '">' +
+            ({ approved: '승인', hold: '보류', pending: '검토 대기' })[c.reviewStatus] + '</span><small>' + BUT_API.fmtTime(c.submittedAt) + ' · 사진 ' + c.photoCount + (c.revision > 1 ? ' · ' + c.revision + '회차' : '') + (c.edited ? ' · 수정됨' : '') + '</small></button>' : '<span class="badge no">미제출</span>') + '</td>';
+        });
+        h += '<td><b>' + cnt + '</b>/4</td></tr>';
+      });
+      h += '</tbody></table></div></section>';
+      $view.innerHTML = h;
+      document.getElementById('refresh').addEventListener('click', viewOverview);
+      Array.prototype.forEach.call(document.querySelectorAll('[data-go]'), function (b) {
+        b.addEventListener('click', function () {
+          var p = b.dataset.go.split('|');
+          A.filters = { day: p[0], studentId: p[1], status: '' };
+          show('review');
+        });
+      });
+    }).catch(fail);
+  }
+  setInterval(function () { if (A.token && A.tab === 'overview' && document.visibilityState === 'visible') viewOverview(); }, 60000);
+
+  // ============================================================ 검토 · 편집
+  function viewReview() {
+    Promise.all([api('adminSubmissions', { day: A.filters.day || null, studentId: A.filters.studentId || null }), api('adminSettings')]).then(function (rs) {
+      A.subs = rs[0].submissions;
+      A.settings = rs[1];
+      renderReview();
+    }).catch(fail);
+  }
+  function renderReview() {
+    var f = A.filters;
+    var list = A.subs.filter(function (s) { return !f.status || s.reviewStatus === f.status; });
+    var students = {};
+    A.subs.forEach(function (s) { students[s.studentId] = s.displayName; });
+    var h = '<div class="filters">' +
+      '<select class="select" id="fDay"><option value="">모든 날짜</option>' + PROG.days.map(function (d) { return '<option value="' + d.day + '"' + (String(f.day) === String(d.day) ? ' selected' : '') + '>DAY ' + pad2(d.day) + ' · ' + esc(d.theme) + '</option>'; }).join('') + '</select>' +
+      '<input class="input" id="fStu" placeholder="학생 번호" value="' + esc(f.studentId) + '" style="max-width:120px">' +
+      '<select class="select" id="fSt"><option value="">모든 상태</option><option value="pending"' + (f.status === 'pending' ? ' selected' : '') + '>검토 대기</option><option value="approved"' + (f.status === 'approved' ? ' selected' : '') + '>승인</option><option value="hold"' + (f.status === 'hold' ? ' selected' : '') + '>보류(결과물 제외)</option></select>' +
+      '<button class="btn small" id="fGo">적용</button><button class="btn ghost small" id="fReset">초기화</button>' +
+      '<span class="muted" style="align-self:center;font-size:13px">' + list.length + '건</span></div>';
+    h += list.map(subCard).join('') || '<p class="muted">조건에 맞는 제출물이 없습니다.</p>';
+    $view.innerHTML = h;
+    document.getElementById('fGo').addEventListener('click', function () {
+      A.filters = { day: document.getElementById('fDay').value, studentId: document.getElementById('fStu').value.trim(), status: document.getElementById('fSt').value };
+      viewReview();
+    });
+    document.getElementById('fReset').addEventListener('click', function () { A.filters = { day: '', studentId: '', status: '' }; viewReview(); });
+    list.forEach(bindSub);
+    var ids = [];
+    list.forEach(function (s) { s.photos.forEach(function (p) { ids.push(p.photoId); }); });
+    loadPhotos(ids).then(function () {
+      ids.forEach(function (id) {
+        var img = document.querySelector('img[data-photo="' + id + '"]');
+        if (img && A.photos[id]) img.src = A.photos[id];
+      });
+    }).catch(fail);
+  }
+
+  function subCard(s) {
+    var d = BUT_Program.getDay(s.day);
+    var topics = s.topics || s.autoTopics;
+    var heroes = (A.settings && A.settings.heroes) || {};
+    var h = '<article class="card sub" id="sub-' + s.submissionId + '" style="border-left:5px solid ' + d.color + '">';
+    h += '<div class="sub-photos">' + s.photos.map(function (p) {
+      return '<div class="sub-photo"><img data-photo="' + p.photoId + '" alt="">' + (p.caption ? '<span class="cap">' + esc(p.caption) + (p.mission ? ' · 미션 ' + p.mission : '') + '</span>' : '') +
+        '<div class="tools">' +
+        '<button data-feat="' + p.photoId + '" class="' + (s.featuredPhotoId === p.photoId ? 'on' : '') + '" title="포스터 카드에 쓸 사진">★ 카드</button>' +
+        '<button data-exh="' + p.photoId + '" class="' + (p.exhibit ? 'on' : '') + '" title="팜플렛·주제 포스터 우선 사용">전시</button>' +
+        '<button data-hero="' + p.photoId + '" data-day="' + s.day + '" class="' + (heroes[s.day] === p.photoId ? 'on' : '') + '" title="날짜별 포스터 대표 사진">메인</button>' +
+        '<button data-orig="' + p.photoId + '" title="원본 보기">원본</button></div></div>';
+    }).join('') + '<div class="muted" style="font-size:12px">원본 ' + s.photos.map(function (p) { return Math.round((p.bytes || 0) / 1024) + 'KB'; }).join(' · ') + '</div></div>';
+
+    h += '<div><div class="row" style="justify-content:space-between;margin-bottom:10px"><div><span class="label" style="color:' + d.color + '">DAY ' + pad2(s.day) + ' · ' + esc(d.theme) + '</span><h3 style="font-size:17px">' + esc(s.displayName) + ' <span class="muted mono">#' + esc(s.studentId) + '</span>' + (s.name ? ' <span class="muted" style="font-size:13px">' + esc(s.name) + '</span>' : '') + '</h3>' +
+      '<span class="muted" style="font-size:12px">' + BUT_API.fmtTime(s.submittedAt) + ' 제출 · ' + s.revision + '회차' + (s.revision > 1 ? ' <a href="#" data-hist="1">이전 회차 보기</a>' : '') + (s.editedAt ? ' · 교사 수정 ' + BUT_API.fmtTime(s.editedAt) : '') + '</span></div>' +
+      '<div class="seg" data-seg>' + [['pending', '검토 대기'], ['approved', '승인'], ['hold', '보류']].map(function (x) { return '<button data-st="' + x[0] + '" class="' + (s.reviewStatus === x[0] ? 'on' : '') + '">' + x[1] + '</button>'; }).join('') + '</div></div>';
+    h += editField(s, 'oneLine', '한 줄 기록', 'input');
+    h += editField(s, 'reflection', '성찰 질문 답변', 'textarea');
+    h += editField(s, 'essay', '소감문', 'textarea');
+    h += '<div class="field"><div class="field-label">주제 분류 <span class="hint">' + (s.topics ? '교사 지정' : '자동 분류 — 눌러서 바꾸면 교사 지정으로 저장') + '</span></div><div class="row">' +
+      PROG.topics.map(function (t) {
+        var on = topics.indexOf(t.key) >= 0;
+        return '<button class="topic-toggle' + (on ? ' on' : '') + '" data-topic="' + t.key + '" style="' + (on ? 'background:' + t.color + ';border-color:' + t.color : 'color:' + t.color) + '">' + esc(t.title) + '</button>';
+      }).join('') + '</div></div>';
+    h += '<label class="field"><span class="field-label">교사 메모 <span class="hint">학생에게 보이지 않음</span></span><input class="input" data-k="teacherNote" value="' + esc(s.teacherNote) + '"></label>';
+    h += '<div class="row"><button class="btn" data-save>저장</button><span class="muted" style="font-size:13px" data-msg></span></div>';
+    h += '</div></article>';
+    return h;
+  }
+  function editField(s, key, label, type) {
+    var cap = key.charAt(0).toUpperCase() + key.slice(1);
+    var edited = s['edited' + cap];
+    var val = edited || s[key];
+    var h = '<div class="field"><div class="field-label">' + label + (edited ? ' <span class="badge warn">교사 수정본</span>' : '') + ' <span class="counter">' + Array.from(val).length + '자</span></div>';
+    if (edited) h += '<details><summary>학생 원문 보기</summary><div class="orig">' + esc(s[key]) + '</div><button class="btn ghost small" data-restore="' + key + '">원문으로 되돌리기</button></details>';
+    h += type === 'input' ? '<input class="input" data-k="' + key + '" value="' + esc(val) + '">' : '<textarea class="textarea" data-k="' + key + '" style="min-height:' + (key === 'essay' ? 200 : 110) + 'px">' + esc(val) + '</textarea>';
+    return h + '</div>';
+  }
+
+  function bindSub(s) {
+    var root = document.getElementById('sub-' + s.submissionId);
+    var state = { reviewStatus: s.reviewStatus, topics: s.topics ? s.topics.slice() : null, restore: {} };
+    var msg = root.querySelector('[data-msg]');
+    root.querySelectorAll('[data-st]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        state.reviewStatus = b.dataset.st;
+        root.querySelectorAll('[data-st]').forEach(function (x) { x.classList.toggle('on', x === b); });
+      });
+    });
+    root.querySelectorAll('[data-topic]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var cur = state.topics || (s.autoTopics || []).slice();
+        var k = b.dataset.topic, i = cur.indexOf(k);
+        if (i >= 0) cur.splice(i, 1); else cur.push(k);
+        state.topics = cur;
+        var t = PROG.topics.filter(function (x) { return x.key === k; })[0];
+        var on = cur.indexOf(k) >= 0;
+        b.classList.toggle('on', on);
+        b.style.cssText = on ? 'background:' + t.color + ';border-color:' + t.color : 'color:' + t.color;
+      });
+    });
+    root.querySelectorAll('[data-restore]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var k = b.dataset.restore;
+        root.querySelector('[data-k="' + k + '"]').value = s[k];
+        state.restore[k] = true;
+        toast('원문을 불러왔습니다. 저장을 눌러 확정하세요.');
+      });
+    });
+    var hist = root.querySelector('[data-hist]');
+    if (hist) hist.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      api('adminHistory', { studentId: s.studentId, day: s.day }).then(function (r) {
+        var o = document.createElement('div');
+        o.className = 'overlay';
+        o.innerHTML = '<div class="dialog" style="width:min(720px,100%);max-height:85vh;overflow:auto"><h3>제출 이력 · ' + esc(s.displayName) + ' DAY ' + pad2(s.day) + '</h3>' +
+          r.revisions.map(function (v) { return '<div style="border-top:1px solid var(--line);padding:10px 0"><b>' + v.revision + '회차</b> <span class="muted">' + BUT_API.fmtTime(v.submittedAt) + ' · ' + (v.status === 'current' ? '현재' : '이전') + '</span><div class="orig">“' + esc(v.oneLine) + '”\n\n' + esc(v.reflection) + '\n\n' + esc(v.essay) + '</div></div>'; }).join('') +
+          '<div class="actions"><button class="btn">닫기</button></div></div>';
+        document.body.appendChild(o);
+        o.querySelector('.actions .btn').addEventListener('click', function () { o.remove(); });
+      }).catch(fail);
+    });
+    root.querySelector('[data-save]').addEventListener('click', function () {
+      var patch = { reviewStatus: state.reviewStatus, teacherNote: root.querySelector('[data-k="teacherNote"]').value };
+      ['oneLine', 'reflection', 'essay'].forEach(function (k) {
+        var v = root.querySelector('[data-k="' + k + '"]').value.trim();
+        var cap = 'edited' + k.charAt(0).toUpperCase() + k.slice(1);
+        patch[cap] = v === s[k].trim() ? '' : v;
+      });
+      if (state.topics) patch.topics = state.topics;
+      msg.textContent = '저장 중…';
+      api('adminUpdateSubmission', { submissionId: s.submissionId, patch: patch }).then(function (r) {
+        Object.keys(r.submission).forEach(function (k) { s[k] = r.submission[k]; });
+        msg.textContent = '저장됨 ' + BUT_API.fmtTime(r.submission.editedAt).split(' ')[1];
+      }).catch(function (e) { msg.textContent = ''; fail(e); });
+    });
+    root.querySelectorAll('[data-feat]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        api('adminUpdateSubmission', { submissionId: s.submissionId, patch: { featuredPhotoId: b.dataset.feat } }).then(function () {
+          s.featuredPhotoId = b.dataset.feat;
+          root.querySelectorAll('[data-feat]').forEach(function (x) { x.classList.toggle('on', x === b); });
+          toast('포스터 카드 사진으로 지정했습니다.');
+        }).catch(fail);
+      });
+    });
+    root.querySelectorAll('[data-exh]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var on = !b.classList.contains('on');
+        api('adminUpdatePhoto', { photoId: b.dataset.exh, patch: { exhibit: on } }).then(function () { b.classList.toggle('on', on); }).catch(fail);
+      });
+    });
+    root.querySelectorAll('[data-hero]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var heroes = Object.assign({}, A.settings.heroes || {});
+        heroes[s.day] = b.classList.contains('on') ? '' : b.dataset.hero;
+        api('adminSettings', { set: { heroes: heroes } }).then(function (r) {
+          A.settings = r;
+          document.querySelectorAll('[data-hero]').forEach(function (x) { x.classList.toggle('on', r.heroes[x.dataset.day] === x.dataset.hero); });
+          toast(heroes[s.day] ? 'DAY ' + pad2(s.day) + ' 포스터 대표 사진으로 지정했습니다.' : '대표 사진 지정을 해제했습니다.');
+        }).catch(fail);
+      });
+    });
+    root.querySelectorAll('[data-orig]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var w = window.open('', '_blank');
+        api('adminPhotos', { photoIds: [b.dataset.orig], kind: 'original' }).then(function (r) {
+          var url = r.photos[b.dataset.orig];
+          if (!url) return;
+          var blob = dataUrlToBlob(url);
+          var obj = URL.createObjectURL(blob);
+          if (w) w.location.href = obj; else window.open(obj, '_blank');
+        }).catch(function (e) { if (w) w.close(); fail(e); });
+      });
+    });
+  }
+
+  function dataUrlToBlob(dataUrl) {
+    var parts = dataUrl.split(',');
+    var mime = parts[0].replace(/^data:|;base64$/g, '');
+    var bin = atob(parts[1]);
+    var arr = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    return new Blob([arr], { type: mime });
+  }
+
+  // ============================================================ 학생 관리
+  function viewStudents() {
+    api('adminStudents').then(function (r) {
+      A.students = r.students;
+      var h = '<section class="card panel"><h2>학생 관리 <span class="muted" style="font-size:13px;font-weight:400">실명은 관리자 화면에서만 보이고 결과물에는 ‘표시 이름’이 쓰입니다.</span></h2>' +
+        '<div class="row" style="margin-bottom:12px"><button class="btn small" id="gen">학생 번호 01~' + pad2(PROG.participants) + ' 생성(없는 번호만)</button>' +
+        '<button class="btn ghost small" id="showPin">PIN 보기</button><button class="btn ghost small" id="slips">PIN 배부 카드 · QR 안내문</button></div>' +
+        '<div class="table-wrap"><table><thead><tr><th>번호</th><th>표시 이름(결과물)</th><th>실명(선택)</th><th>PIN</th><th>사진 전시 동의</th><th>사용</th><th>선생님의 한마디 (성장 기록지)</th><th></th></tr></thead><tbody>' +
+        r.students.map(function (s) {
+          return '<tr data-sid="' + esc(s.studentId) + '"><td class="mono">' + esc(s.studentId) + '</td>' +
+            '<td><input class="input" data-f="displayName" value="' + esc(s.displayName) + '" style="min-width:130px"></td>' +
+            '<td><input class="input" data-f="name" value="' + esc(s.name) + '" style="min-width:90px"></td>' +
+            '<td><span class="mono pin" data-pin="' + esc(s.pin) + '">••••</span> <button class="btn ghost small" data-newpin>재발급</button></td>' +
+            '<td><input type="checkbox" data-f="exhibitConsent"' + (s.exhibitConsent ? ' checked' : '') + '></td>' +
+            '<td><input type="checkbox" data-f="active"' + (s.active ? ' checked' : '') + '></td>' +
+            '<td><textarea class="textarea" data-f="teacherComment" style="min-height:44px;min-width:240px">' + esc(s.teacherComment) + '</textarea></td>' +
+            '<td><button class="btn small" data-save>저장</button></td></tr>';
+        }).join('') + '</tbody></table></div>' +
+        '<div class="row" style="margin-top:14px"><input class="input" id="newId" placeholder="새 학생 번호" style="max-width:160px"><button class="btn small" id="addStu">학생 추가</button></div></section>';
+      $view.innerHTML = h;
+      document.getElementById('gen').addEventListener('click', function () {
+        api('adminGenerateStudents', { count: PROG.participants, startAt: 1 }).then(function (x) { toast(x.created.length + '명 생성'); viewStudents(); }).catch(fail);
+      });
+      document.getElementById('showPin').addEventListener('click', function () {
+        document.querySelectorAll('.pin').forEach(function (p) { p.textContent = p.textContent === '••••' ? p.dataset.pin : '••••'; });
+      });
+      document.getElementById('slips').addEventListener('click', function () {
+        A.tab = 'outputs';
+        show('outputs');
+        setTimeout(function () { var b = document.querySelector('[data-out="guide"] [data-act="preview"]'); if (b) b.click(); }, 300);
+      });
+      document.getElementById('addStu').addEventListener('click', function () {
+        var id = document.getElementById('newId').value.trim();
+        if (!id) return;
+        api('adminUpsertStudent', { student: { studentId: id } }).then(function () { viewStudents(); }).catch(fail);
+      });
+      document.querySelectorAll('tr[data-sid]').forEach(function (tr) {
+        var sid = tr.dataset.sid;
+        tr.querySelector('[data-save]').addEventListener('click', function () {
+          var st = { studentId: sid };
+          tr.querySelectorAll('[data-f]').forEach(function (el) { st[el.dataset.f] = el.type === 'checkbox' ? el.checked : el.value; });
+          api('adminUpsertStudent', { student: st }).then(function () { toast(sid + '번 저장됨'); }).catch(fail);
+        });
+        tr.querySelector('[data-newpin]').addEventListener('click', function () {
+          if (!confirm(sid + '번 학생의 PIN을 새로 발급할까요? 학생은 새 PIN으로 다시 로그인해야 합니다.')) return;
+          var pin = String(Math.floor(1000 + Math.random() * 9000));
+          api('adminUpsertStudent', { student: { studentId: sid, pin: pin } }).then(function () {
+            var p = tr.querySelector('.pin'); p.dataset.pin = pin; p.textContent = pin; toast('새 PIN: ' + pin);
+          }).catch(fail);
+        });
+      });
+    }).catch(fail);
+  }
+
+  // ============================================================ 결과물
+  var EXTRA = [{ key: 'guide', label: '접속 안내(QR) + PIN 배부 카드 A4' }];
+  function photoMax(key) { return /^day|^topic/.test(key) ? 2000 : 1200; }
+
+  function viewOutputs() {
+    api('adminSettings').then(function (st) {
+      A.settings = st;
+      var h = '<section class="card panel"><h2>결과물 자동 생성</h2>' +
+        '<p class="muted" style="margin:-4px 0 14px;font-size:14px">미리보기 → <b>PDF 인쇄</b>(브라우저 인쇄 창에서 ‘PDF로 저장’, 여백 없음·배경 그래픽 켜기) / <b>PPTX</b>(PowerPoint·Keynote·Google Slides·Canva에서 편집) / <b>HTML</b>(웹 편집용 원본)</p>' +
+        '<div class="row" style="margin-bottom:14px"><label class="row" style="gap:6px"><input type="checkbox" id="approvedOnly"> 승인된 기록만 사용</label>' +
+        '<label class="row" style="gap:6px">성장 기록지 대상 <select class="select" id="growthWho" style="width:auto"><option value="">전체 학생</option></select></label>' +
+        '<label class="row" style="gap:6px;flex:1;min-width:280px">학생용 주소(QR) <input class="input" id="appUrl" value="' + esc(st.appUrl || '') + '"></label></div>' +
+        '<div class="outputs">' + L.OUTPUTS.concat(EXTRA).map(function (o) {
+          return '<div class="card out" data-out="' + o.key + '"><span class="label">' + (o.key.indexOf('day') === 0 || o.key.indexOf('topic') === 0 ? 'A1 POSTER' : o.key === 'growth' || o.key === 'guide' ? 'A4' : o.key === 'pamphlet-a4' ? 'A4 BOOKLET' : 'A5') + '</span><h3>' + esc(o.label) + '</h3>' +
+            '<div class="row"><button class="btn small" data-act="preview">미리보기</button><button class="btn ghost small" data-act="print">PDF 인쇄</button></div>' +
+            '<div class="row"><button class="btn ghost small" data-act="pptx">PPTX</button><button class="btn ghost small" data-act="html">HTML</button>' + (BUT_API.isGAS ? '<button class="btn ghost small" data-act="drive">Drive 저장</button>' : '') + '</div></div>';
+        }).join('') + '</div>' +
+        '<div class="row" style="margin-top:14px"><button class="btn ghost small" id="csv">Canva 대량 제작용 CSV</button><button class="btn ghost small" id="json">데이터 백업(JSON)</button></div></section>' +
+        '<section class="card panel hidden" id="pvPanel"><h2 id="pvTitle">미리보기</h2><div class="preview" id="pv"></div></section>';
+      $view.innerHTML = h;
+      api('adminStudents').then(function (r) {
+        A.students = r.students;
+        var sel = document.getElementById('growthWho');
+        sel.innerHTML += r.students.map(function (s) { return '<option value="' + esc(s.studentId) + '">' + esc(s.studentId + ' · ' + s.displayName) + '</option>'; }).join('');
+      });
+      document.querySelectorAll('[data-out]').forEach(function (card) {
+        card.querySelectorAll('[data-act]').forEach(function (b) {
+          b.addEventListener('click', function () { runOutput(card.dataset.out, b.dataset.act, b); });
+        });
+      });
+      document.getElementById('csv').addEventListener('click', exportCSV);
+      document.getElementById('json').addEventListener('click', function () {
+        dataset().then(function (ds) { download(new Blob([JSON.stringify(ds, null, 2)], { type: 'application/json' }), 'BUT_TOKYO_2026_데이터.json'); }).catch(fail);
+      });
+    }).catch(fail);
+  }
+
+  function dataset() {
+    return api('adminDataset', { approvedOnly: document.getElementById('approvedOnly') && document.getElementById('approvedOnly').checked });
+  }
+
+  function buildDoc(key) {
+    if (key === 'guide') {
+      var url = document.getElementById('appUrl').value.trim() || location.href.split('?')[0];
+      var stu = (A.students || []).filter(function (s) { return s.active; }).map(function (s) { return { studentId: s.studentId, displayName: s.displayName, pin: s.pin }; });
+      return Promise.resolve({ doc: L.accessGuide(url, stu), key: key });
+    }
+    return dataset().then(function (ds) {
+      var who = document.getElementById('growthWho').value;
+      var doc = L.build(key, ds, { studentIds: who ? [who] : null });
+      if (key === 'growth' && who) doc.name += '_' + who;
+      return { doc: doc, key: key };
+    });
+  }
+
+  function withPhotos(doc, key) {
+    var ids = L.photoIdsOf(doc);
+    var max = photoMax(key);
+    return loadPhotos(ids).then(function () {
+      return Promise.all(ids.map(function (id) { return scaled(id, max); }));
+    }).then(function () {
+      return function (id) { return A.photos[id + '@' + max] || A.photos[id] || null; };
+    });
+  }
+
+  function runOutput(key, act, btn) {
+    var label = btn.textContent;
+    btn.disabled = true; btn.textContent = '준비 중…';
+    var done = function () { btn.disabled = false; btn.textContent = label; };
+    buildDoc(key).then(function (b) {
+      return withPhotos(b.doc, key).then(function (resolve) {
+        if (act === 'preview') return preview(b.doc, resolve);
+        if (act === 'print') return printDoc(b.doc, resolve);
+        if (act === 'html') return download(new Blob([RH.documentHTML(b.doc, resolve)], { type: 'text/html' }), b.doc.name + '.html');
+        var pptx = RP.render(b.doc, resolve, window.PptxGenJS);
+        if (act === 'pptx') return pptx.write({ outputType: 'blob' }).then(function (blob) { download(blob, b.doc.name + '.pptx'); });
+        if (act === 'drive') {
+          return pptx.write({ outputType: 'base64' }).then(function (b64) {
+            return api('adminSaveOutput', { name: b.doc.name + '.pptx', mime: 'application/vnd.openxmlformats-officedocument.presentationml.presentation', base64: b64 }, { retries: 1 });
+          }).then(function (r) { toast('Drive에 저장했습니다.'); if (r.url) window.open(r.url, '_blank'); });
+        }
+      });
+    }).then(done).catch(function (e) { done(); fail(e); });
+  }
+
+  function preview(doc, resolve) {
+    var panel = document.getElementById('pvPanel');
+    panel.classList.remove('hidden');
+    document.getElementById('pvTitle').innerHTML = esc(doc.name) + ' <span class="muted" style="font-size:13px;font-weight:400">' + doc.pages.length + '쪽 · ' + doc.sizeKey + ' (' + doc.size.w + '×' + doc.size.h + 'mm)</span>';
+    var pv = document.getElementById('pv');
+    var styleId = 'pv-style';
+    var st = document.getElementById(styleId) || document.head.appendChild(Object.assign(document.createElement('style'), { id: styleId }));
+    st.textContent = RH.css(doc).replace(/@page[^}]*}/, '');
+    var maxW = Math.min(pv.clientWidth - 36, doc.sizeKey === 'A1' ? 760 : 560);
+    var pxW = doc.size.w * 3.7795;
+    var k = maxW / pxW;
+    var limit = 12;
+    function draw(n) {
+      pv.innerHTML = doc.pages.slice(0, n).map(function (p) {
+        return '<div class="pg" style="width:' + Math.round(pxW * k) + 'px;height:' + Math.round(doc.size.h * 3.7795 * k) + 'px;overflow:hidden">' +
+          RH.pageHTML(doc, p, resolve).replace('<section class="but-page" style="', '<section class="but-page" style="transform:scale(' + k + ');') + '</div>';
+      }).join('') + (doc.pages.length > n ? '<button class="btn" id="more">나머지 ' + (doc.pages.length - n) + '쪽 더 보기</button>' : '');
+      var more = document.getElementById('more');
+      if (more) more.addEventListener('click', function () { draw(doc.pages.length); });
+    }
+    draw(limit);
+    panel.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function printDoc(doc, resolve) {
+    var root = document.getElementById('print-root');
+    document.getElementById('print-style').textContent = RH.css(doc);
+    root.innerHTML = RH.pagesHTML(doc, resolve);
+    var imgs = Array.prototype.slice.call(root.querySelectorAll('img'));
+    return Promise.all(imgs.map(function (im) { return im.complete ? null : new Promise(function (r) { im.onload = im.onerror = r; }); }))
+      .then(function () { return document.fonts ? document.fonts.ready : null; })
+      .then(function () {
+        toast('인쇄 창에서 ‘PDF로 저장’, 용지 ' + doc.sizeKey + ', 여백 ‘없음’, ‘배경 그래픽’을 선택하세요.', 6000);
+        setTimeout(function () {
+          window.print();
+          setTimeout(function () { root.innerHTML = ''; document.getElementById('print-style').textContent = ''; }, 1500);
+        }, 300);
+      });
+  }
+
+  function download(blob, name) {
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+  }
+
+  function exportCSV() {
+    dataset().then(function (ds) {
+      var head = ['student_label', 'student_id', 'day', 'day_label', 'date', 'theme', 'one_line', 'reflection', 'essay', 'photo1_file', 'photo2_file', 'photo3_file'];
+      var rows = ds.entries.map(function (e) {
+        var d = BUT_Program.getDay(e.day);
+        var files = e.photos.map(function (p) { return e.studentId + '_D' + e.day + '_' + p.id + '_print.jpg'; });
+        return [e.displayName, e.studentId, e.day, 'DAY ' + pad2(e.day), d.dateLabel, d.theme, e.oneLine, e.reflection, e.essay, files[0] || '', files[1] || '', files[2] || ''];
+      });
+      var csv = '﻿' + [head].concat(rows).map(function (r) { return r.map(function (v) { return '"' + String(v).replace(/"/g, '""') + '"'; }).join(','); }).join('\r\n');
+      download(new Blob([csv], { type: 'text/csv;charset=utf-8' }), 'BUT_TOKYO_2026_Canva_대량제작.csv');
+    }).catch(fail);
+  }
+
+  // ============================================================ 설정
+  function viewSettings() {
+    api('adminSettings').then(function (st) {
+      A.settings = st;
+      var h = '<section class="card panel"><h2>제출 기간 · 마감</h2>' +
+        '<div class="kv"><span>제출 가능 날짜</span><select class="select" id="openMode" style="max-width:360px"><option value="all"' + (st.openMode === 'all' ? ' selected' : '') + '>모든 DAY 항상 제출 가능 (테스트·사후 제출)</option><option value="byDate"' + (st.openMode === 'byDate' ? ' selected' : '') + '>해당 날짜(도쿄 시각)부터 제출 가능</option></select>' +
+        PROG.days.map(function (d) { return '<span>DAY ' + pad2(d.day) + ' 마감</span><label class="row" style="gap:6px"><input type="checkbox" data-lock="' + d.day + '"' + (st.locks[d.day] ? ' checked' : '') + '> 제출 마감 (학생 수정 불가, 교사 편집은 가능)</label>'; }).join('') +
+        '</div><div class="row" style="margin-top:14px"><button class="btn" id="saveSet">저장</button></div></section>';
+      h += '<section class="card panel"><h2>학생 접속 주소</h2><div class="kv"><span>주소</span><span class="mono">' + esc(st.appUrl || '(배포 후 표시)') + '</span><span>관리자 주소</span><span class="mono">' + esc((st.appUrl || '') + '?page=admin') + '</span></div>' +
+        (st.appUrl ? '<div style="width:160px;margin-top:12px">' + RH.qrSvg(st.appUrl) + '</div>' : '') + '</section>';
+      h += '<section class="card panel danger"><h2 style="color:var(--accent)">가상(테스트) 데이터 삭제</h2><p class="muted" style="font-size:14px;margin-top:-4px">실제 학생 사용 전에 테스트 제출물·사진을 모두 지웁니다. 사진 파일은 Drive 휴지통으로 이동합니다(30일 후 영구 삭제).</p>' +
+        '<label class="row" style="gap:6px;margin-bottom:10px"><input type="checkbox" id="purgeStudents"> 학생 명단과 PIN도 삭제 (새로 생성 필요)</label>' +
+        '<div class="row"><input class="input" id="purgeConfirm" placeholder="DELETE 입력" style="max-width:180px"><button class="btn accent" id="purge">모두 삭제</button></div></section>';
+      $view.innerHTML = h;
+      document.getElementById('saveSet').addEventListener('click', function () {
+        var locks = {};
+        document.querySelectorAll('[data-lock]').forEach(function (c) { locks[c.dataset.lock] = c.checked; });
+        api('adminSettings', { set: { openMode: document.getElementById('openMode').value, locks: locks } }).then(function () { toast('저장했습니다.'); }).catch(fail);
+      });
+      document.getElementById('purge').addEventListener('click', function () {
+        var c = document.getElementById('purgeConfirm').value.trim();
+        if (c !== 'DELETE') { toast('확인 문구로 DELETE를 입력하세요.'); return; }
+        if (!confirm('정말 모든 제출물과 사진을 삭제할까요? 되돌릴 수 없습니다.')) return;
+        api('adminPurge', { confirm: 'DELETE', students: document.getElementById('purgeStudents').checked }).then(function (r) {
+          toast('삭제 완료: 사진 ' + r.deletedPhotos + '장');
+          show('overview');
+        }).catch(fail);
+      });
+    }).catch(fail);
+  }
+
+  if (A.token) start(); else renderLogin();
+})();
+
+</script>
+</body>
+</html>

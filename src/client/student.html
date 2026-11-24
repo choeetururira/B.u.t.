@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F5F0E6">
+<title>B.U.T. TOKYO 2026 · 벗과 함께 도쿄를 기록하다</title>
+<!--HEAD-->
+<style>
+<!--THEME-->
+.wrap { max-width: 560px; margin: 0 auto; padding: 0 16px calc(120px + env(safe-area-inset-bottom)); }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 0 12px; }
+.brand b { display: block; font-size: 13px; letter-spacing: .18em; }
+.brand span { font-size: 12px; color: var(--ink-soft); }
+.hero { padding: 14px 0 18px; border-bottom: 1px solid var(--ink); margin-bottom: 18px; display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; }
+.hero h1 { font-size: 28px; }
+.hero p { margin: 6px 0 0; color: var(--ink-soft); font-size: 14px; }
+
+/* 로그인 */
+.login { padding: 22px; }
+.login h2 { font-size: 20px; margin-bottom: 4px; }
+.consent { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: var(--ink-soft); background: var(--paper); border-radius: 12px; padding: 12px; margin-bottom: 16px; }
+.consent input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--accent); flex: none; }
+.pin-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* 상단 학생 정보 + DAY 탭 */
+.me { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.me strong { font-size: 18px; letter-spacing: .04em; }
+.tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
+.tab { border: 1px solid var(--line); background: var(--card); border-radius: 14px; padding: 10px 4px 8px; text-align: center; line-height: 1.2; position: relative; }
+.tab b { display: block; font-size: 15px; letter-spacing: .04em; }
+.tab small { font-size: 11px; color: var(--ink-soft); }
+.tab .dot { position: absolute; top: -6px; right: -4px; width: 18px; height: 18px; border: 2px solid var(--paper); border-radius: 50%; background: var(--ok); color: #fff; font-size: 10px; display: grid; place-items: center; }
+.tab[aria-selected="true"] { background: var(--day); border-color: var(--day); color: #fff; }
+.tab[aria-selected="true"] small { color: rgba(255,255,255,.85); }
+.tab.locked { opacity: .55; }
+
+/* 미션 카드 */
+.mission { padding: 20px; margin-bottom: 16px; border-top: 6px solid var(--day); }
+.mission .day-no { font-size: 46px; font-weight: 700; color: var(--day); line-height: 1; letter-spacing: -0.02em; }
+.mission h2 { font-size: 21px; margin: 6px 0 2px; }
+.mission .places { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 14px; color: var(--day); }
+.mission ol { list-style: none; padding: 0; margin: 0 0 14px; }
+.mission li { display: flex; gap: 10px; padding: 9px 0; border-top: 1px dashed var(--line); font-size: 15px; }
+.mission li i { font-style: normal; font-weight: 700; color: var(--day); flex: none; }
+.question { background: var(--paper); border-radius: 12px; padding: 12px 14px; font-family: var(--font-body); font-size: 15px; }
+.question .label { display: block; margin-bottom: 4px; color: var(--day); }
+
+.status-banner { padding: 14px 16px; margin-bottom: 16px; display: flex; gap: 12px; align-items: center; justify-content: space-between; background: var(--ok-soft); border-color: #bcd6c1; }
+.status-banner.closed { background: var(--paper-deep); border-color: var(--line); }
+
+/* 기록 폼 */
+.form { padding: 20px; }
+.form h3 { font-size: 17px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.ph { position: relative; aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: var(--paper-deep); }
+.ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ph .rm { position: absolute; top: 4px; right: 4px; width: 30px; height: 30px; border-radius: 50%; border: 0; background: rgba(35,48,63,.75); color: #fff; font-size: 16px; line-height: 1; }
+.ph .st { position: absolute; left: 0; right: 0; bottom: 0; font-size: 11px; padding: 3px 6px; background: rgba(35,48,63,.65); color: #fff; }
+.add-ph { aspect-ratio: 1; border: 1.5px dashed var(--sage); border-radius: 12px; background: transparent; display: grid; place-items: center; color: var(--ink-soft); font-size: 13px; line-height: 1.3; text-align: center; }
+.add-ph b { font-size: 26px; display: block; color: var(--ink); font-weight: 400; }
+.ph-meta { display: grid; gap: 8px; margin-top: 10px; }
+.ph-meta .row { display: grid; grid-template-columns: 44px 1fr 92px; gap: 6px; align-items: center; }
+.ph-meta .row img { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; }
+.ph-meta .input, .ph-meta .select { padding: 8px 10px; font-size: 16px; }
+
+/* 전시 카드 미리보기 (예시 디자인) */
+.preview-wrap { display: grid; grid-template-columns: 1fr 1.1fr; gap: 14px; align-items: center; margin-top: 4px; }
+.pcard { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px 10px 12px; }
+.pcard .label { font-size: 8px; }
+.pcard .d { font-weight: 700; font-size: 16px; margin: 1px 0 4px; }
+.pcard .im { aspect-ratio: 4/3; border-radius: 9px; background: var(--paper-deep); overflow: hidden; }
+.pcard .im img { width: 100%; height: 100%; object-fit: cover; }
+.pcard .t { font-weight: 700; font-size: 14px; line-height: 1.35; margin: 8px 0 4px; min-height: 2.7em; word-break: keep-all; }
+.pcard .m { font-size: 10px; color: var(--ink-soft); letter-spacing: .04em; }
+.pcard .ln { height: 2px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: 6px; }
+
+.submit-bar { position: fixed; left: 0; right: 0; bottom: 0; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: linear-gradient(to top, var(--paper) 70%, rgba(245,240,230,0)); z-index: 20; }
+.submit-bar .inner { max-width: 560px; margin: 0 auto; display: flex; gap: 8px; align-items: center; }
+.submit-bar .saved { font-size: 12px; color: var(--ink-soft); white-space: nowrap; }
+
+/* 완료 화면 */
+.done { padding: 28px 22px; text-align: center; }
+.done .stamp { width: 84px; height: 84px; font-size: 32px; margin: 4px auto 14px; }
+.receipt { text-align: left; background: var(--paper); border-radius: 12px; padding: 14px 16px; margin: 16px 0; font-size: 14px; }
+.receipt div { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; }
+.receipt span { color: var(--ink-soft); }
+footer.note { font-size: 12px; color: var(--ink-soft); text-align: center; margin: 26px 0 0; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><b>B.U.T. TOKYO 2026</b><span>Beyond Universal Togetherness</span></div>
+    <span class="stamp" aria-hidden="true">벗</span>
+  </header>
+  <section class="hero">
+    <div>
+      <h1>벗과 함께<br>도쿄를 기록하다</h1>
+      <p>12.07 – 12.10 · 매일 저녁, 오늘의 나를 기록해요</p>
+    </div>
+  </section>
+
+  <main id="app" aria-live="polite"></main>
+
+  <footer class="note">
+    사진과 글은 인솔 선생님만 볼 수 있어요. 전시물에는 실명 대신 ‘학생 표시 이름’이 쓰입니다.<br>
+    문제가 있으면 인솔 선생님께 바로 알려 주세요.
+  </footer>
+</div>
+<input type="file" id="file" accept="image/*" multiple class="hidden">
+<!--LIBS-->
+<script>
+<!--APP-->
+</script>
+</body>
+</html>

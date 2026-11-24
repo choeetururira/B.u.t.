@@ -1,0 +1,8 @@
+node_modules/
+data/
+output/
+dist/*
+!dist/gas/
+.clasp.json
+.clasprc.json
+*.log
